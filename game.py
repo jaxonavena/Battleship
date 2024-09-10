@@ -16,6 +16,7 @@ class Game:
 ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",]
 ]
     self.turn_count = 1
+    self.list_of_synonyms_for_quit_lol = ["exit", "q", "quit", "EXIT", "Q", "QUIT"]
 
   def __switch_turns(self): # Switch who is activated
     for player in self.player_bank:
@@ -30,20 +31,18 @@ class Game:
   def __take_turn(self, turn_count):
     print(f"Turn #{turn_count}")
     self.print_board()
-
-    for player in self.player_bank:
-      if player.active == True:
-        active_player_id = player.id
+    active_player_id = self.get_active_player_id()
 
     coord = input(f"Player {active_player_id}'s turn: ")
+    if coord in self.list_of_synonyms_for_quit_lol: # QUIT GAME
+      exit()
 
     if self.valid_coord(coord):
       print(coord) # TODO: Replace with actual stuff.
-
       self.turn_count += 1
       self.__switch_turns()
 
-    self.__take_turn(self.turn_count)
+    self.__take_turn(self.turn_count) # This will replay the turn if the input was invalid otherwise it will start the next turn
 
   def print_board(self):
     print("  A B C D E F G H I J")
@@ -51,24 +50,19 @@ class Game:
       print(f"{i} " + " ".join(row))
 
   def valid_coord(self, coord):
-    row, col = self.__set_row_and_col_from_coord(coord)
-    if self.__handle_invalid_coordinates(row, col): # row, col valid?
-      return True
-    else:
-      return False
+    valid = self.__handle_coordinates(coord) # (valid? (bool), row, col) tuple being returned
+    return True if valid else False
 
+  def __handle_coordinates(self, coord):
+    row, col = coord[0], coord[1]
 
-  def __set_row_and_col_from_coord(self, coord):
     try:
       col = coord[0].upper() # Assume it's a letter
-      row = int(coord[1]) # Assume it's a number
-    except ValueError as e:
-      print(f"An error occurred: {e}. Your coordinate must be a letter-number pair (e.g. A8)")
+      row = int(coord[1:]) # Assume it's a number, grab everything after the column letter
+    except ValueError as _e:
+      print("Your coordinate must be a letter-number pair (e.g. A8)")
       return False
 
-    return row, col
-
-  def __handle_invalid_coordinates(self, row, col):
     if col not in ["A","B","C","D","E","F","G","H","I","J"]:
       print("Invalid Coordinate. Ensure your input starts with a valid column header (e.g. E4)")
       return False
@@ -82,3 +76,8 @@ class Game:
       return False
 
     return True
+
+  def get_active_player_id(self):
+    for player in self.player_bank:
+      if player.active == True:
+        return player.id
