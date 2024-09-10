@@ -1,4 +1,4 @@
 class Player:
-  def __init__(self, num, active):
-    self.num = num
+  def __init__(self, id, active):
+    self.id = id
     self.active = active
