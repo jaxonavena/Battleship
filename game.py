@@ -1,6 +1,7 @@
 from game_object import GameObject
 class Game(GameObject):
   def __init__(self, player_bank):
+    super().__init__()
     self.player_bank = player_bank
     self.player1 = player_bank[0]
     self.player2 = player_bank[1]
@@ -17,7 +18,8 @@ class Game(GameObject):
 ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",]
 ]
     self.turn_count = 1
-    self.list_of_synonyms_for_quit_lol = ["exit", "q", "quit", "EXIT", "Q", "QUIT"]
+    self.active_player = self.get_active_player()
+    self.num_ships = 0
 
   def __switch_turns(self): # Switch who is activated
     for player in self.player_bank:
@@ -27,23 +29,21 @@ class Game(GameObject):
         player.active = False
 
   def start(self):
-    self.__setup_boards()
-    # TODO: Need to have an initial period where players submit their boards with their ships laid out
-    # We'll need to have some vars tracking their real boards, but display a different board for the shooter with the ships hidden.
+    self.__set_ship_lists() # Determine the number of ships each player will have and set the list
+    self.__setup_boards() # Hide the ships
     self.__take_turn(1) # Start shootin
 
   def __take_turn(self, turn_count):
     print(f"Turn #{turn_count}")
-    self.print_board()
-    active_player_id = self.get_active_player_id()
-
-
+    self.print_board() # TODO: Remove this and the var. We won't need it since players track their own boards
+    active_player_id = self.get_active_player().id
     coord = input(f"Player {active_player_id}'s turn: ")
-    if coord in self.list_of_synonyms_for_quit_lol: # QUIT GAME
+
+    if coord in self.list_of_synonyms_for_quit_lol: # QUIT GAME?
       exit()
 
     if self.valid_coord(coord):
-      print(coord) # TODO: Replace with actual stuff.
+      self.active_player.attack_ships(coord)
       self.turn_count += 1
       self.__switch_turns()
 
@@ -54,16 +54,20 @@ class Game(GameObject):
     for i, row in enumerate(self.board, start=0): # This just prepends the numbers to the rows
       print(f"{i} " + " ".join(row))
 
-  def valid_coord(self, coord):
-    return self.handle_coordinates(coord) # bool
-
-  def get_active_player_id(self):
+  def get_active_player(self):
     for player in self.player_bank:
       if player.active == True:
-        return player.id
+        return player
 
   def __setup_boards(self):
     self.player1.hide_ships()
     self.player2.hide_ships()
+
+  def __set_ship_lists(self):
+    while 0 >= self.num_ships or self.num_ships > 5: # Until num ships is a number 1-5
+      self.num_ships = int(input("How many ships per team?: ")) # TODO: Error handling?
+
+    self.player1.set_ship_list(self.num_ships)
+    self.player2.set_ship_list(self.num_ships)
 
 
