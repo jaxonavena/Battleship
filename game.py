@@ -69,5 +69,3 @@ class Game(GameObject):
 
     self.player1.set_ship_list(self.num_ships)
     self.player2.set_ship_list(self.num_ships)
-
-
