@@ -36,8 +36,7 @@ class Game(GameObject):
   def __take_turn(self, turn_count):
     print(f"Turn #{turn_count}")
     self.print_board() # TODO: Remove this and the var. We won't need it since players track their own boards
-    active_player_id = self.get_active_player().id
-    coord = input(f"Player {active_player_id}'s turn: ")
+    coord = input(f"Player {self.active_player.id}'s turn: ")
 
     if coord in self.list_of_synonyms_for_quit_lol: # QUIT GAME?
       exit()

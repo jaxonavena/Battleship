@@ -5,7 +5,7 @@ class Player(GameObject):
   def __init__(self, id, active):
     super().__init__()
     self.id = id
-    self.active = active
+    self.active = active #boolean
     self.board = [
 ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",],
 ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",],
@@ -36,6 +36,7 @@ class Player(GameObject):
     for _ship in self.ship_list: # Hide all ships
       print(f"Player {self.id} - Hiding their {self.selected_ship()}...")
       self.print_board(self.board)
+
       coord = input("Hide the ship: ")
 
       if coord in self.list_of_synonyms_for_quit_lol: # QUIT GAME?

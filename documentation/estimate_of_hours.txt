@@ -1,0 +1,6 @@
+Based on how long I spent on day 1 in comparison to how much I got done I would estimate everyone needs to spend around
+3-5 hours in order for us to have a polished product. That totals to 15-25 man hours. This could be way off.
+I arrived at these numbers because I got about 8 requirements done last night in about 3-5 hours.
+So on our Github issue where the tasks are listed, we have 9/42 tasks complete, with some taking two seconds to do,
+and others taking a few hours. Extrapolate my experience last night and it's about 5 times as much work.
+We have 5 team members. 5*(3-5 hours) = 15-25 hours.
