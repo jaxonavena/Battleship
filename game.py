@@ -1,4 +1,5 @@
-class Game:
+from game_object import GameObject
+class Game(GameObject):
   def __init__(self, player_bank):
     self.player_bank = player_bank
     self.player1 = player_bank[0]
@@ -26,12 +27,16 @@ class Game:
         player.active = False
 
   def start(self):
-    self.__take_turn(1)
+    self.__setup_boards()
+    # TODO: Need to have an initial period where players submit their boards with their ships laid out
+    # We'll need to have some vars tracking their real boards, but display a different board for the shooter with the ships hidden.
+    self.__take_turn(1) # Start shootin
 
   def __take_turn(self, turn_count):
     print(f"Turn #{turn_count}")
     self.print_board()
     active_player_id = self.get_active_player_id()
+
 
     coord = input(f"Player {active_player_id}'s turn: ")
     if coord in self.list_of_synonyms_for_quit_lol: # QUIT GAME
@@ -50,34 +55,15 @@ class Game:
       print(f"{i} " + " ".join(row))
 
   def valid_coord(self, coord):
-    valid = self.__handle_coordinates(coord) # (valid? (bool), row, col) tuple being returned
-    return True if valid else False
-
-  def __handle_coordinates(self, coord):
-    row, col = coord[0], coord[1]
-
-    try:
-      col = coord[0].upper() # Assume it's a letter
-      row = int(coord[1:]) # Assume it's a number, grab everything after the column letter
-    except ValueError as _e:
-      print("Your coordinate must be a letter-number pair (e.g. A8)")
-      return False
-
-    if col not in ["A","B","C","D","E","F","G","H","I","J"]:
-      print("Invalid Coordinate. Ensure your input starts with a valid column header (e.g. E4)")
-      return False
-
-    if row not in range(0,10):
-      print("Invalid Coordinate. Ensure your input ends with a valid row header (e.g. C3)")
-      return False
-
-    if row < 0 or row > 9:
-      print("Invalid Coordinate. Ensure your input lies within the bounds of the 10x10 board. (Zero indexed)")
-      return False
-
-    return True
+    return self.handle_coordinates(coord) # bool
 
   def get_active_player_id(self):
     for player in self.player_bank:
       if player.active == True:
         return player.id
+
+  def __setup_boards(self):
+    self.player1.hide_ships()
+    self.player2.hide_ships()
+
+
