@@ -8,6 +8,13 @@
 ```
 - Mostly work on the Github repo, but a little more coding. Added documentation folder, organized project requirements into a Github issue.
 ```
+  Probably about 4 more hours
+```
+- Peter resolved a bug that was holding me back and I begain implementing the ability to orient your ships when you place down 1xN ships where N > 1. 
+```
+<details>
+  <img width="718" alt="Screenshot 2024-09-10 at 10 21 23 PM" src="https://github.com/user-attachments/assets/fab53248-c921-43d3-9ea7-9b3edc05bae9">
+</details>
 
 # Achraf
 
