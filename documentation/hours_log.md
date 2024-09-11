@@ -8,8 +8,9 @@
 ```
 - Mostly work on the Github repo, but a little more coding. Added documentation folder, organized project requirements into a Github issue.
 ```
-  Probably about 4 more hours
+  Probably about 3 more hours
 ```
+- I did tid bits between the last chunk of time and this chunk
 - Peter resolved a bug that was holding me back and I begain implementing the ability to orient your ships when you place down 1xN ships where N > 1. 
 ```
 <details>
