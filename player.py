@@ -44,9 +44,9 @@ class Player(GameObject):
 
       if self.valid_coord(coord):
         # coord = "a5"
-        # coord => GameObject.letter_to_row_index => __hide_ship(0,5) => col, row
+        # coord => GameObject.letter_to_col_index => __hide_ship(0,5) => col, row
         # TODO: UPDATE THIS COMMENT (AND FUNCTION) FROM 05 WHEN ROW NUMBERS CHANGE
-        self.__hide_ship(int(self.letter_to_row_index[coord[0].upper()]), int(coord[1])) # Not to be confused with hide_ships()
+        self.__hide_ship(int(self.letter_to_col_index[coord[0].upper()]), int(coord[1])) # Not to be confused with hide_ships()
         # self.print_board(self.board)
       else:
         self.hide_ships() # This will replay the turn if the input was invalid otherwise it will start the next turn
@@ -86,6 +86,7 @@ class Player(GameObject):
       print(f"Remaining ships: {self.ship_list}")
 
   def __orient_ship(self, row, col):
+    coord = self.__row_col_to_coord(row, col)
     direction = ""
     print("u = Up\nd = Down\nl = Left\nr = Right")
 
@@ -96,28 +97,25 @@ class Player(GameObject):
       # l: left
       # r: right
       if direction == "u":
-        for i in range(self.selected_ship_size()): # For a ship 1xN this will attempt to lay down N ship tiles in the chosen direction
-          # print(f"{i} - Iterating -------;;;;")
-          # print(f"Checking coordinate: ({row-(i+1)}, {col}) => {self.board[row-(i+1)][col]}")
-          if self.valid_coord() and self.board[row - i][col] == "*":
-            self.board[row - i][col] = self.selected_ship_symbol()
+        self.lay_ship_out(coord, self.board[row - self.selected_ship_size()][col])
 
       elif direction == "d":
-        for i in range(self.selected_ship_size()): # For a ship 1xN this will attempt to lay down N ship tiles in the chosen direction
-          if self.board[row + i][col] == "*":
-            self.board[row + i][col] = self.selected_ship_symbol()
+        self.lay_ship_out(coord, self.board[row + self.selected_ship_size()][col])
 
       elif direction == "l":
-        for i in range(self.selected_ship_size()): # For a ship 1xN this will attempt to lay down N ship tiles in the chosen direction
-          if self.board[row][col - i] == "*":
-            self.board[row][col - i] = self.selected_ship_symbol()
+        self.lay_ship_out(coord, self.board[row][col - self.selected_ship_size()])
 
       elif direction == "r":
-        for i in range(self.selected_ship_size()): # For a ship 1xN this will attempt to lay down N ship tiles in the chosen direction
-          if self.board[row][col + i] == "*":
-            self.board[row][col + i] = self.selected_ship_symbol()
+        self.lay_ship_out(coord, self.board[row][col + self.selected_ship_size()])
 
       else:
         print("Pick one: u d l r")
 
 
+  def __row_col_to_coord(self, row, col):
+      return self.col_index_to_letter[col] + str(row) # Return LetterNumber coordinate that works with GameObject.valid_coord()
+
+  def lay_ship_out(self, coord, targeted_tile):
+    for _ in range(self.selected_ship_size()): # For a ship 1xN this will attempt to lay down N ship tiles in the chosen direction
+      if self.valid_coord(coord) and targeted_tile == "*":
+        targeted_tile = self.selected_ship_symbol()
