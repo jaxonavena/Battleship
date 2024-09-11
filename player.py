@@ -30,26 +30,54 @@ class Player(GameObject):
 ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",],
 ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",]
 ]
-    self.ship_list = ["_"] # Needs placeholder to init
+    self.ship_list = []
+
+  # def hide_ships(self):
+  #   for _ship in self.ship_list: # Hide all ships
+  #     print(f"Player {self.id} - Hiding their {self.selected_ship()}...")
+  #     self.print_board(self.board)
+
+  #     coord = input("Hide the ship: ")
+
+  #     if coord in self.list_of_synonyms_for_quit_lol: # QUIT GAME?
+  #       exit()
+
+  #     if self.valid_coord(coord):
+  #       # coord = "a5"
+  #       # coord => GameObject.letter_to_row_index_map => __hide_ship(0,5) => col, row
+  #       # TODO: UPDATE THIS COMMENT (AND FUNCTION) FROM 05 WHEN ROW NUMBERS CHANGE
+  #       self.__hide_ship(int(self.letter_to_row_index_map[coord[0].upper()]), int(coord[1])) # Not to be confused with hide_ships()
+  #       # self.print_board(self.board)
+  #     else:
+  #       self.hide_ships() # This will replay the turn if the input was invalid otherwise it will start the next turn
 
   def hide_ships(self):
-    for _ship in self.ship_list: # Hide all ships
-      print(f"Player {self.id} - Hiding their {self.selected_ship()}...")
-      self.print_board(self.board)
+     # Call __hide_ship() on all ships to hide all ships
+    for _ship in self.ship_list:
+      while True:
+        print(f"DEBUG: Current ship list: {self.ship_list}")
+        print(f"Player {self.id} - Hiding their {self.selected_ship()}...")
+        self.print_board(self.board)
 
-      coord = input("Hide the ship: ")
+        coord = input("Hide the ship: ")
 
-      if coord in self.list_of_synonyms_for_quit_lol: # QUIT GAME?
-        exit()
+        if coord in self.list_of_synonyms_for_quit_lol: # QUIT GAME?
+          exit()
 
-      if self.valid_coord(coord):
-        # coord = "a5"
-        # coord => GameObject.letter_to_row_index_map => __hide_ship(0,5) => col, row
-        # TODO: UPDATE THIS COMMENT (AND FUNCTION) FROM 05 WHEN ROW NUMBERS CHANGE
-        self.__hide_ship(int(self.letter_to_row_index_map[coord[0].upper()]), int(coord[1])) # Not to be confused with hide_ships()
-        # self.print_board(self.board)
-      else:
-        self.hide_ships() # This will replay the turn if the input was invalid otherwise it will start the next turn
+        if self.valid_coord(coord):
+          # coord = "a5"
+          # coord => GameObject.letter_to_row_index_map => __hide_ship(0,5) => col, row
+          # TODO: UPDATE THIS COMMENT (AND FUNCTION) FROM 05 WHEN ROW NUMBERS CHANGE
+          self.__hide_ship(int(self.letter_to_row_index_map[coord[0].upper()]), int(coord[1])) # Not to be confused with hide_ships()
+          # self.print_board(self.board)
+          print(f"DEBUG: Ship hidden at {coord}. Remaining ships: {self.ship_list}")
+          break
+
+  def __hide_ship(self, col, row):
+    # Hide a specific ship
+    self.board[row][col] = "@"
+    self.ship_list.pop(0)
+    print(f"Remaining ships: {self.ship_list}")
 
   def print_board(self, board):
     print("  A B C D E F G H I J")
@@ -67,9 +95,3 @@ class Player(GameObject):
 
   def selected_ship(self):
     return self.ship_size_to_name_map[self.ship_list[0]]
-
-  def __hide_ship(self, col, row):
-    self.board[row][col] = "@"
-    self.ship_list.pop(0)
-    print(f"Unhidden ships: {self.ship_list}")
-

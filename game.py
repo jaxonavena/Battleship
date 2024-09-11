@@ -58,9 +58,22 @@ class Game(GameObject):
       if player.active == True:
         return player
 
+  # def __setup_boards(self):
+  #   self.player1.hide_ships()
+  #   self.player2.hide_ships()
+
   def __setup_boards(self):
-    self.player1.hide_ships()
-    self.player2.hide_ships()
+    # Ensure all ships are hidden before switching to the other player
+    print("Player 1 hiding ships...")
+    self.player1.hide_ships()  # Hide ships for Player 1
+    if self.player1.ship_list:  # Check if all ships are hidden
+        print(f"DEBUG: Player 1 has remaining ships: {self.player1.ship_list}")
+
+    print("Player 2 hiding ships...")
+    self.player2.hide_ships()  # Hide ships for Player 2
+    if self.player2.ship_list:  # Check if all ships are hidden
+        print(f"DEBUG: Player 2 has remaining ships: {self.player2.ship_list}")
+
 
   def __set_ship_lists(self):
     while 0 >= self.num_ships or self.num_ships > 5: # Until num ships is a number 1-5
