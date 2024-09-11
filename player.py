@@ -33,7 +33,7 @@ class Player(GameObject):
     self.ship_list = ["_"] # Needs placeholder to init
 
   def hide_ships(self):
-    for _ship in self.ship_list: # Hide all ships
+    while self.ship_list != []: # Hide all ships
       print(f"Player {self.id} - Hiding their {self.selected_ship()}...")
       self.print_board(self.board)
 
