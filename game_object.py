@@ -1,14 +1,21 @@
 class GameObject:
   def __init__(self):
     self.list_of_synonyms_for_quit_lol = ["exit", "q", "quit", "EXIT", "Q", "QUIT"]
-    self.ship_size_to_name_map = {
+    self.ship_size_to_name = {
       "1x1": "Cruiser",
       "1x2": "Submarine",
       "1x3": "Destroyer",
       "1x4": "Battleship",
       "1x5": "Aircraft Carrier"
     }
-    self.letter_to_row_index_map = {
+    self.ship_size_to_symbol = {
+      "1x1": "&",
+      "1x2": "%",
+      "1x3": "#",
+      "1x4": "$",
+      "1x5": "@"
+    }
+    self.letter_to_row_index = {
       "A": 0,
       "B": 1,
       "C": 2,

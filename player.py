@@ -30,11 +30,11 @@ class Player(GameObject):
 ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",],
 ["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",]
 ]
-    self.ship_list = ["_"] # Needs placeholder to init
+    self.ship_list = []
 
   def hide_ships(self):
     while self.ship_list != []: # Hide all ships
-      print(f"Player {self.id} - Hiding their {self.selected_ship()}...")
+      print(f"Player {self.id} - Hiding their {self.selected_ship_name()}...")
       self.print_board(self.board)
 
       coord = input("Hide the ship: ")
@@ -44,9 +44,9 @@ class Player(GameObject):
 
       if self.valid_coord(coord):
         # coord = "a5"
-        # coord => GameObject.letter_to_row_index_map => __hide_ship(0,5) => col, row
+        # coord => GameObject.letter_to_row_index => __hide_ship(0,5) => col, row
         # TODO: UPDATE THIS COMMENT (AND FUNCTION) FROM 05 WHEN ROW NUMBERS CHANGE
-        self.__hide_ship(int(self.letter_to_row_index_map[coord[0].upper()]), int(coord[1])) # Not to be confused with hide_ships()
+        self.__hide_ship(int(self.letter_to_row_index[coord[0].upper()]), int(coord[1])) # Not to be confused with hide_ships()
         # self.print_board(self.board)
       else:
         self.hide_ships() # This will replay the turn if the input was invalid otherwise it will start the next turn
@@ -65,11 +65,59 @@ class Player(GameObject):
     self.ship_list.reverse() # Desc. order
     print(self.ship_list)
 
-  def selected_ship(self):
-    return self.ship_size_to_name_map[self.ship_list[0]]
+  def selected_ship_name(self):
+    return self.ship_size_to_name[self.ship_list[0]]
+
+  def selected_ship_symbol(self):
+    return self.ship_size_to_symbol[self.ship_list[0]]
+
+  def selected_ship_size(self):
+    return int(self.ship_list[0][-1])
 
   def __hide_ship(self, col, row):
-    self.board[row][col] = "@"
-    self.ship_list.pop(0)
-    print(f"Unhidden ships: {self.ship_list}")
+    self.board[row][col] = self.selected_ship_symbol() # Initial placement
+
+    if self.selected_ship_size() > 1: # If we can orient this ship...
+      self.__orient_ship(row, col)
+
+    self.ship_list.pop(0) # Remove it from our list of remaining ships
+
+    if self.ship_list != []:
+      print(f"Remaining ships: {self.ship_list}")
+
+  def __orient_ship(self, row, col):
+    direction = ""
+    print("u = Up\nd = Down\nl = Left\nr = Right")
+
+    while direction not in ["u","d","l","r"]:
+      direction = input("Which direction do you want your ship to be oriented?: ").lower()
+      # u: up
+      # d: down
+      # l: left
+      # r: right
+      if direction == "u":
+        for i in range(self.selected_ship_size()): # For a ship 1xN this will attempt to lay down N ship tiles in the chosen direction
+          # print(f"{i} - Iterating -------;;;;")
+          # print(f"Checking coordinate: ({row-(i+1)}, {col}) => {self.board[row-(i+1)][col]}")
+          if self.valid_coord() and self.board[row - i][col] == "*":
+            self.board[row - i][col] = self.selected_ship_symbol()
+
+      elif direction == "d":
+        for i in range(self.selected_ship_size()): # For a ship 1xN this will attempt to lay down N ship tiles in the chosen direction
+          if self.board[row + i][col] == "*":
+            self.board[row + i][col] = self.selected_ship_symbol()
+
+      elif direction == "l":
+        for i in range(self.selected_ship_size()): # For a ship 1xN this will attempt to lay down N ship tiles in the chosen direction
+          if self.board[row][col - i] == "*":
+            self.board[row][col - i] = self.selected_ship_symbol()
+
+      elif direction == "r":
+        for i in range(self.selected_ship_size()): # For a ship 1xN this will attempt to lay down N ship tiles in the chosen direction
+          if self.board[row][col + i] == "*":
+            self.board[row][col + i] = self.selected_ship_symbol()
+
+      else:
+        print("Pick one: u d l r")
+
 
