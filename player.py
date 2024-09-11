@@ -43,6 +43,9 @@ class Player(GameObject):
         exit()
 
       if self.valid_coord(coord):
+        # coord = "a5"
+        # coord => GameObject.letter_to_row_index_map => __hide_ship(0,5) => col, row
+        # TODO: UPDATE THIS COMMENT (AND FUNCTION) FROM 05 WHEN ROW NUMBERS CHANGE
         self.__hide_ship(int(self.letter_to_row_index_map[coord[0].upper()]), int(coord[1])) # Not to be confused with hide_ships()
         # self.print_board(self.board)
       else:
