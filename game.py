@@ -52,6 +52,7 @@ class Game(GameObject):
     print("  A B C D E F G H I J")
     for i, row in enumerate(self.board, start=0): # This just prepends the numbers to the rows
       print(f"{i} " + " ".join(row))
+    
 
   def get_active_player(self):
     for player in self.player_bank:

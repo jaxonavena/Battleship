@@ -32,6 +32,14 @@ class Player(GameObject):
 ]
     self.ship_list = []
 
+    self.ship_locations = {
+      "1x1": [],
+      "1x2": [],
+      "1x3": [],
+      "1x4": [],
+      "1x5": []
+    }
+
   def hide_ships(self):
     while self.ship_list != []: # Hide all ships
       print(f"Player {self.id} - Hiding their {self.selected_ship_name()}...")
@@ -120,7 +128,9 @@ class Player(GameObject):
         if direction in ["u","d","l","r"]:
           for i in range(self.selected_ship_size()):
             # pass in the next adjacent coord until the ship is placed down fully
-            self.__place_ship_tile(self.direction_to_coord(direction, row, col, i))
+            indexable_coord = self.direction_to_coord(direction, row, col, i)
+            self.__place_ship_tile(indexable_coord)
+            self.ship_locations[self.ship_list[0]].append(indexable_coord)
         else:
           print("Pick one: u d l r")
 
