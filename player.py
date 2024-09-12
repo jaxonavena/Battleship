@@ -25,14 +25,6 @@ class Player(GameObject):
         tile = Tile(row, col)
         board[row].append(tile) # place tiles
 
-  def print_board(self, board):
-    # Prints a given board with the rows and columns labeled
-    # ---------------------------------------------------------- #
-    print("  A B C D E F G H I J")
-    for i, row in enumerate(board): # This just prepends the numbers to the rows
-      tiles_as_strings = [str(tile) for tile in row]
-      print(f"{i} " + " ".join(tiles_as_strings))
-
   def set_ship_list(self, num_ships):
     # Add the proper number of properly sized ships to self.ship_list. Ship(name, size, symbol)
     # ---------------------------------------------------------- #
@@ -74,19 +66,15 @@ class Player(GameObject):
       print(f"Player {self.id} - Hiding their {self.selected_ship().name}...")
       self.print_board(self.board)
 
-      coord = input("Hide the ship: ")
+      coord = self.get_input("Hide the ship: ")
 
-      if coord in self.list_of_synonyms_for_quit_lol: # QUIT GAME?
-        exit()
-
-      if self.valid_coord(coord): # If it's on the board
+      if self.valid_coord_with_error_messages(coord): # If it's on the board
         # Get integer indeces
-        row = int(self.letter_to_col_index[coord[0].upper()])
-        col = int(coord[1])
+        row, col = self.coord_translator(coord)
         if type(self.board[row][col]) == Tile: # If the targeted location is a vacant Tile
           self.__hide_ship(row, col) # Not to be confused with hide_ships(). Attempt to hide the ship
 
-  def __hide_ship(self, col, row):
+  def __hide_ship(self, row, col):
     # Hide the selected ship
     # ---------------------------------------------------------- #
     self.__orient_ship(row, col) # orient and place the full length of the ship
@@ -123,13 +111,15 @@ class Player(GameObject):
     # Verify if the selected ship's list of coordinates are all on the board and vacant Tiles
     # ---------------------------------------------------------- #
     flag = False
-    if self.selected_ship().coords_are_inbounds(): # if we're at least placing the ship on the board...
+    if self.coords_are_inbounds(self.selected_ship().coords): # if we're at least placing the ship on the board...
       for coord in self.selected_ship().coords:
         if type(self.board[coord[0]][coord[1]]) == Tile: #...make sure we're not overlapping ships
           self.board[coord[0]][coord[1]] = self.selected_ship() # Set the Tile to be the Ship
-          flag = True # Every coord needs to be valid
+          flag = True
         else:
-          return False
+          return False # Every coord needs to be valid
+    else:
+      self.selected_ship().coords = [] # We're going to retry hiding the ship if we're out of bounds, so we wipe the ship's coords list
     return flag
 
   def direction_to_coord(self, direction, row, col, i):

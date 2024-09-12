@@ -23,13 +23,11 @@ class Game(GameObject):
 
   def __take_turn(self, turn_count):
     print(f"Turn #{turn_count}")
-    self.print_board() # TODO: Remove this and the var. We won't need it since players track their own boards
-    coord = input(f"Player {self.active_player.id}'s turn: ")
+    self.print_board(self.active_player.opps)
 
-    if coord in self.list_of_synonyms_for_quit_lol: # QUIT GAME?
-      exit()
+    coord = self.get_input(f"Player {self.active_player.id}'s turn: ")
 
-    if self.valid_coord(coord):
+    if self.valid_coord_with_error_messages(coord):
       self.active_player.attack_ship(coord)
       self.turn_count += 1
       self.__switch_turns()
@@ -42,22 +40,23 @@ class Game(GameObject):
         return player
 
   def __setup_boards(self):
-    self.player1.hide_ships()
+    for player in self.player_bank:
+      self.__hide_ships_and_print_boards(player)
 
-    print("Player 1 - All ships are hidden...")
-    self.player1.print_board(self.player1.board) # Show their board after they're finished hiding their ships
+  def __hide_ships_and_print_boards(self, player):
+    player.hide_ships()
+
+    print(f"Player {player.id} - All ships are hidden...")
+    self.print_board(player.board) # Show their board after they're finished hiding their ships
     print("----------------------------------\n")
-
-    self.player2.hide_ships()
-
-    print("Player 2 - All ships are hidden...")
-    self.player2.print_board(self.player2.board)
-    print("----------------------------------\n")
-
 
   def __set_ship_lists(self):
     while 0 >= self.num_ships or self.num_ships > 5: # Until num ships is a number 1-5
-      self.num_ships = int(input("How many ships per team?: ")) # TODO: Error handling?
+      print("Please enter a number between 1 and 5.")
+      try:
+        self.num_ships = int(input("How many ships per team?: "))
+      except:
+        self.num_ships = 0
 
     self.player1.set_ship_list(self.num_ships)
     self.player2.set_ship_list(self.num_ships)

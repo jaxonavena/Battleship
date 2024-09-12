@@ -19,7 +19,7 @@
 
 9/11 4 Hours
 ```
-- Met with Pete and helped do some work on his part. I then refactored the whole repo for several hours. The main work that was done was changing the board to be more dynamic by including the new Tile and Ship class on the board, instead of just regular strings. I also refactored the hiding mechanics to be transactional and only accept transactions where all the coords the ship is attempting to be placed on are valid. This prevents a ship from being overlapped or going off the board.
+- Met with Pete and helped do some work on his part. I then refactored the whole repo for several hours. The main work that was done was changing the board to be more dynamic by including the new Tile and Ship class on the board, instead of just regular strings. I also refactored the hiding mechanics to be transactional and only accept transactions where all the coords the ship is attempting to be placed on are valid. This prevents a ship from being overlapped or going off the board. I actually just realized there's a bug where the initial placement can overlap a ship. Oops. I'll have to fix that tomorrow.
 ```
 
 # Achraf

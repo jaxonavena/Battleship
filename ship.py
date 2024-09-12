@@ -13,13 +13,3 @@ class Ship:
 
   def __repr__(self):
       return self.symbol
-
-  def coords_are_inbounds(self):
-    flag = False
-    for coord in self.coords:
-      if coord[0] > 9 or coord[0] < 0 or coord[1] > 9 or coord[1] < 0:
-        self.coords = [] # Erase the coords list, Return False
-        return False
-      else:
-        flag = True
-    return flag
