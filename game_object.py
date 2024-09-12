@@ -1,6 +1,5 @@
 class GameObject:
   def __init__(self):
-    self.list_of_synonyms_for_quit_lol = ["exit", "q", "quit", "EXIT", "Q", "QUIT"]
     self.ship_size_to_name = {
       "1x1": "Cruiser",
       "1x2": "Submarine",
@@ -27,9 +26,8 @@ class GameObject:
       "I": 8,
       "J": 9
     }
-    self.col_index_to_letter = {col_index: letter for letter, col_index in self.letter_to_col_index.items()}
 
-  def valid_coord(self, coord): # Is this a valid coord?
+  def valid_coord_with_error_messages(self, coord): # Is this a valid coord? Takes LetterNumber combo coordinates (e.g. A8)
     try:
       col = coord[0].upper() # Assume it's a letter
       row = int(coord[1:]) # Assume it's a number, grab everything after the column letter
@@ -42,11 +40,40 @@ class GameObject:
       return False
 
     if row not in range(0,10):
-      print("Invalid Coordinate. Ensure your input ends with a valid row header (e.g. C3)")
-      return False
-
-    if row < 0 or row > 9:
-      print("Invalid Coordinate. Ensure your input lies within the bounds of the 10x10 board. (Zero indexed)")
+      print("Invalid Coordinate. Ensure your input lies within the bounds of the 10x10 board.")
       return False
 
     return True
+
+  def coords_are_inbounds(self, coords):
+      flag = False
+      for coord in coords:
+        if coord[0] > 9 or coord[0] < 0 or coord[1] > 9 or coord[1] < 0:
+          return False
+        else:
+          flag = True
+      return flag
+
+  def coord_translator(self, coord):
+    # e.g. coord = A8
+    col = self.letter_to_col_index[coord[0].upper()] # Letters are columns
+    row = int(coord[1]) # Numbers are rows
+    return row, col #return row number, column number to use as indeces
+
+  def print_board(self, board):
+    # Prints a given board with the rows and columns labeled
+    # ---------------------------------------------------------- #
+    print("  A B C D E F G H I J")
+    for i, row in enumerate(board): # This just prepends the numbers to the rows
+      tiles_as_strings = [str(tile) for tile in row]
+      print(f"{i} " + " ".join(tiles_as_strings))
+
+  def quit(self, input):
+    if input in ["exit", "q", "quit", "EXIT", "Q", "QUIT"]:
+      exit()
+
+  def get_input(self, message):
+    my_input = input(message)
+
+    self.quit(my_input) # Quits game if the input is a quit command
+    return my_input
