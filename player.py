@@ -7,7 +7,8 @@ class Player(GameObject):
     super().__init__()
     self.id = id
     self.active = active #boolean
-
+    self.attacked_coords = []
+    self.opponent_object
     self.board = []
     self.__build_board_of_tiles(self.board)
 
@@ -15,6 +16,9 @@ class Player(GameObject):
     self.__build_board_of_tiles(self.opps)
 
     self.ship_list = []
+
+  def set_opponent(self,opponent):
+    self.opponent_object = opponent
 
   def __build_board_of_tiles(self, board):
     # Fills out a given list with 10 nested lists of 10 Tile items
@@ -87,7 +91,60 @@ class Player(GameObject):
 
   def attack_ships(self, coord):
     # TODO: Attack ships
+    # need a boalean return for this so we can mark the opponents board when a hit(true)
+    row = coord[0]
+    col = coord[1]
+    if isinstance(self.opponent_objective.board[row][col],Ship):
+      self.mark_hit_opps_board(coord)
+      self.opponent_objective.board[row][col].health -= 1
+      return True
+    
+    return False
+
+  def mark_hit_opps_board(self, coord):
+    row = coord[0]
+    col = coord[1]
+    self.opps[row][col].symbol = "H"
     return
+  
+  def mark_miss_opps_board(self, coord):
+    row = coord[0]
+    col = coord[1]
+    self.opps[row][col].symbol = "M"
+    return
+  
+  def mark_hit_player_board(self, coord):
+    row = coord[0]
+    col = coord[1]
+    self.board[row][col].symbol = "H"
+    return
+  
+  def mark_miss_player_board(self, coord):
+    row = coord[0]
+    col = coord[1]
+    self.board[row][col].symbol = "M"
+    return
+  
+  def sunk_ship_opps(self, coord):
+    row = coord[0]
+    col = coord[1]
+    if self.opps[row][col].health == 0:
+      for i in self.opps[row][col].coord:
+        ship_row = i[0]
+        ship_col = i[1]
+        self.opps[ship_row][ship_col].symbol = "S"
+    return
+  
+  def sunk_ship_player(self, coord):
+    row = coord[0]
+    col = coord[1]
+    if self.board[row][col].health == 0:
+      for i in self.board[row][col].coord:
+        ship_row = i[0]
+        ship_col = i[1]
+        self.board[ship_row][ship_col].symbol = "S"
+    return
+
 
   def set_ship_list(self, num_ships):
     self.ship_list = [f"1x{i}" for i in range(1, num_ships + 1)]
