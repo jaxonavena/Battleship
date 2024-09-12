@@ -11,11 +11,16 @@
   Probably about 3 more hours
 ```
 - I did tid bits between the last chunk of time and this chunk
-- Peter resolved a bug that was holding me back and I begain implementing the ability to orient your ships when you place down 1xN ships where N > 1. 
+- Peter resolved a bug that was holding me back and I begain implementing the ability to orient your ships when you place down 1xN ships where N > 1.
 ```
 <details>
   <img width="718" alt="Screenshot 2024-09-10 at 10 21 23 PM" src="https://github.com/user-attachments/assets/fab53248-c921-43d3-9ea7-9b3edc05bae9">
 </details>
+
+9/11 4 Hours
+```
+- Met with Pete and helped do some work on his part. I then refactored the whole repo for several hours. The main work that was done was changing the board to be more dynamic by including the new Tile and Ship class on the board, instead of just regular strings. I also refactored the hiding mechanics to be transactional and only accept transactions where all the coords the ship is attempting to be placed on are valid. This prevents a ship from being overlapped or going off the board.
+```
 
 # Achraf
 
