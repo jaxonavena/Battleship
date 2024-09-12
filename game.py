@@ -11,7 +11,8 @@ class Game(GameObject):
 
   def __switch_turns(self): # Switch who is activated
     for player in self.player_bank:
-      player.active = not player.active
+        player.active = not player.active  # Toggle the active state for both players
+    self.active_player = self.get_active_player()  # Set the active player for the next turn
 
   def start(self):
     self.__set_ship_lists() # Determine the number of ships each player will have and set the list
@@ -25,17 +26,30 @@ class Game(GameObject):
     coord = self.get_input(f"Player {self.active_player.id}'s turn: ")
 
     if self.valid_coord_with_error_messages(coord):
-      self.active_player.attack_ship(coord)
-      self.turn_count += 1
-      self.__switch_turns()
+        hit = self.active_player.attack_ship(coord)
+        if hit:
+            # Check if all opponent's ships are sunk
+            if all(ship.hp == 0 for ship in self.get_inactive_player().ship_list):
+                print(f"Player {self.active_player.id} wins!")
+                exit()
+        else:
+          self.turn_count += 1
+          self.__switch_turns()
 
-    self.__take_turn(self.turn_count) # This will replay the turn if the input was invalid otherwise it will start the next turn
+    self.__take_turn(self.turn_count)  # Replay turn if input was invalid
+
 
   def get_active_player(self):
     for player in self.player_bank:
       if player.active == True:
         return player
 
+  def get_inactive_player(self):
+    # Returns the player who is currently inactive
+    for player in self.player_bank:
+        if not player.active:
+            return player
+        
   def __setup_boards(self):
     for player in self.player_bank:
       player.hide_ships()

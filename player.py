@@ -119,9 +119,11 @@ class Player(GameObject):
           self.board[coord[0]][coord[1]] = self.selected_ship() # Set the Tile to be the Ship
           flag = True
         else:
-          return False # Every coord needs to be valid
+          flag = False # Every coord needs to be valid
+          break
     else:
       self.selected_ship().coords = [] # We're going to retry hiding the ship if we're out of bounds, so we wipe the ship's coords list
+      flag = False
     return flag
 
   def direction_to_coord(self, direction, row, col, i):
@@ -136,8 +138,29 @@ class Player(GameObject):
     return direction_to_coord[direction]
 
   def attack_ship(self, coord):
-    # TODO: Attack ships
-    return
+    # Translates the input to row and column indices
+    row, col = self.coord_translator(coord)
+
+    print(f"Player {self.id} firing at: {coord} -> (row: {row}, col: {col})")
+    print(f"Target tile content: {self.opps[row][col]}")  # Print what is in the tile
+    
+    # Check if the shot hits a ship
+    if isinstance(self.opps[row][col], Ship):  # Check if the opponent's tile contains a Ship
+        ship = self.opps[row][col]
+        print(f"Hit! You hit the {ship.name}.")
+        self.opps[row][col] = "H"  # Mark as a hit on the opponent's board
+
+        ship.hp -= 1  # Reduce the hit points of the ship
+        if ship.hp == 0:
+            print(f"You've sunk the {ship.name}!")
+        return True
+    else:
+        # Mark as a miss if it's an empty tile
+        print("Miss!")
+        self.opps[row][col] = "M"
+        return False
+
+
 
   def print_ship_list(self):
     # Print the ship list
