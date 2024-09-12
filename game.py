@@ -5,18 +5,6 @@ class Game(GameObject):
     self.player_bank = player_bank
     self.player1 = player_bank[0]
     self.player2 = player_bank[1]
-    self.board = [
-["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",],
-["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",],
-["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",],
-["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",],
-["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",],
-["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",],
-["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",],
-["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",],
-["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",],
-["*", "*", "*", "*", "*", "*", "*", "*", "*", "*",]
-]
     self.turn_count = 1
     self.active_player = self.get_active_player()
     self.num_ships = 0
@@ -47,11 +35,6 @@ class Game(GameObject):
       self.__switch_turns()
 
     self.__take_turn(self.turn_count) # This will replay the turn if the input was invalid otherwise it will start the next turn
-
-  def print_board(self):
-    print("  A B C D E F G H I J")
-    for i, row in enumerate(self.board, start=0): # This just prepends the numbers to the rows
-      print(f"{i} " + " ".join(row))
 
   def get_active_player(self):
     for player in self.player_bank:
