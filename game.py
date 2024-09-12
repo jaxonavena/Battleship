@@ -11,10 +11,7 @@ class Game(GameObject):
 
   def __switch_turns(self): # Switch who is activated
     for player in self.player_bank:
-      if player.active == False:
-        player.active = True
-      elif player.active == True:
-        player.active = False
+      player.active = not player.active
 
   def start(self):
     self.__set_ship_lists() # Determine the number of ships each player will have and set the list

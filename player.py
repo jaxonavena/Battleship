@@ -68,6 +68,8 @@ class Player(GameObject):
 
       coord = self.get_input("Hide the ship: ")
 
+      self.quit(coord) # Quits game if the inpput is a quit command
+
       if self.valid_coord_with_error_messages(coord): # If it's on the board
         # Get integer indeces
         row, col = self.coord_translator(coord)

@@ -1,6 +1,5 @@
 class GameObject:
   def __init__(self):
-    self.list_of_synonyms_for_quit_lol = ["exit", "q", "quit", "EXIT", "Q", "QUIT"]
     self.ship_size_to_name = {
       "1x1": "Cruiser",
       "1x2": "Submarine",
@@ -70,7 +69,7 @@ class GameObject:
       print(f"{i} " + " ".join(tiles_as_strings))
 
   def quit(self, input):
-    if input in self.list_of_synonyms_for_quit_lol: # QUIT GAME?
+    if input in ["exit", "q", "quit", "EXIT", "Q", "QUIT"]:
       exit()
 
   def get_input(self, message):
