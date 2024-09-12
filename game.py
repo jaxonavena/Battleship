@@ -38,14 +38,10 @@ class Game(GameObject):
 
   def __setup_boards(self):
     for player in self.player_bank:
-      self.__hide_ships_and_print_boards(player)
-
-  def __hide_ships_and_print_boards(self, player):
-    player.hide_ships()
-
-    print(f"Player {player.id} - All ships are hidden...")
-    self.print_board(player.board) # Show their board after they're finished hiding their ships
-    print("----------------------------------\n")
+      player.hide_ships()
+      print(f"Player {player.id} - All ships are hidden...")
+      self.print_board(player.board) # Show their board after they're finished hiding their ships
+      print("----------------------------------\n")
 
   def __set_ship_lists(self):
     while 0 >= self.num_ships or self.num_ships > 5: # Until num ships is a number 1-5
