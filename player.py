@@ -32,6 +32,14 @@ class Player(GameObject):
 ]
     self.ship_list = []
 
+    self.ship_location = {
+      "1x1": [],
+      "1x2": [],
+      "1x3": [],
+      "1x4": [],
+      "1x5": []
+    }
+
   def hide_ships(self):
     while self.ship_list != []: # Hide all ships
       print(f"Player {self.id} - Hiding their {self.selected_ship_name()}...")
@@ -58,7 +66,24 @@ class Player(GameObject):
 
   def attack_ships(self, coord):
     # TODO: Attack ships
+    # call mark hit or miss 
     return
+
+  def mark_hit(self, coord):
+    row = coord[0]
+    row = self.letter_to_row_index[row]
+    col = coord[1]
+    self.opps[row][col] = "H"
+    return
+  
+  def mark_miss(self, coord):
+    row = coord[0]
+    col = coord[1]
+    self.opps[row][col] = "M"
+    return
+  
+  def sunk_ship(self):
+
 
   def set_ship_list(self, num_ships):
     self.ship_list = [f"1x{i}" for i in range(1, num_ships + 1)]
@@ -116,6 +141,7 @@ class Player(GameObject):
         for i in range(self.selected_ship_size()): # For a ship 1xN this will attempt to lay down N ship tiles in the chosen direction
           if self.board[row][col + i] == "*":
             self.board[row][col + i] = self.selected_ship_symbol()
+            
 
       else:
         print("Pick one: u d l r")

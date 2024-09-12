@@ -57,7 +57,7 @@ class Game(GameObject):
     for player in self.player_bank:
       if player.active == True:
         return player
-
+      
   def __setup_boards(self):
     self.player1.hide_ships()
 
