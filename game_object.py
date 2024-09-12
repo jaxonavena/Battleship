@@ -15,7 +15,7 @@ class GameObject:
       "1x4": "$",
       "1x5": "@"
     }
-    self.letter_to_row_index = {
+    self.letter_to_col_index = {
       "A": 0,
       "B": 1,
       "C": 2,
@@ -27,6 +27,7 @@ class GameObject:
       "I": 8,
       "J": 9
     }
+    self.col_index_to_letter = {col_index: letter for letter, col_index in self.letter_to_col_index.items()}
 
   def valid_coord(self, coord): # Is this a valid coord?
     try:
