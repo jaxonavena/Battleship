@@ -30,7 +30,7 @@ class Game(GameObject):
       exit()
 
     if self.valid_coord(coord):
-      self.active_player.attack_ships(coord)
+      self.active_player.attack_ship(coord)
       self.turn_count += 1
       self.__switch_turns()
 
