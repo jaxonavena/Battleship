@@ -26,10 +26,11 @@ class Game(GameObject):
     coord = self.get_input(f"Player {self.active_player.id}'s turn: ")
 
     if self.valid_coord_with_error_messages(coord):
-        hit = self.active_player.attack_ship(coord)
+        opponent = self.get_inactive_player()
+        hit = self.active_player.attack_ship(coord, opponent)
         if hit:
             # Check if all opponent's ships are sunk
-            if all(ship.hp == 0 for ship in self.get_inactive_player().ship_list):
+            if self.all_ships_sunk(opponent):
                 print(f"Player {self.active_player.id} wins!")
                 exit()
         else:
@@ -67,3 +68,10 @@ class Game(GameObject):
 
     self.player1.set_ship_list(self.num_ships)
     self.player2.set_ship_list(self.num_ships)
+
+  def all_ships_sunk(self, opponent):
+        # Check if all ships have been sunk
+        for ship in opponent.ship_list:
+            if ship.hp > 0:
+                return False  # If any ship has HP left, the game continues
+        return True  # If all ships are sunk, the game ends

@@ -137,7 +137,7 @@ class Player(GameObject):
     }
     return direction_to_coord[direction]
 
-  def attack_ship(self, coord):
+  def attack_ship(self, coord, opponent):
     # Translates the input to row and column indices
     row, col = self.coord_translator(coord)
 
@@ -145,8 +145,8 @@ class Player(GameObject):
     print(f"Target tile content: {self.opps[row][col]}")  # Print what is in the tile
     
     # Check if the shot hits a ship
-    if isinstance(self.opps[row][col], Ship):  # Check if the opponent's tile contains a Ship
-        ship = self.opps[row][col]
+    if isinstance(opponent.board[row][col], Ship):  # Check if the opponent's tile contains a Ship
+        ship = opponent.board[row][col]
         print(f"Hit! You hit the {ship.name}.")
         self.opps[row][col] = "H"  # Mark as a hit on the opponent's board
 
