@@ -21,6 +21,9 @@ class Game(GameObject):
 
   def __take_turn(self, turn_count):
     print(f"Turn #{turn_count}")
+    print("Your board")
+    self.print_board(self.active_player.board)
+    print("Opps board")
     self.print_board(self.active_player.opps)
 
     coord = self.get_input(f"Player {self.active_player.id}'s turn: ")
@@ -30,10 +33,14 @@ class Game(GameObject):
       if coord not in self.active_player.attacked_coords:
         if(self.active_player.attack_ship(coord)):
           self.inactive_player.mark_hit_player_board(coord)
+          self.inactive_player.sunk_ship_player(coord)
           self.turn_count += 1
+          print(self.active_player)
           self.__switch_turns()
         else:
           self.inactive_player.mark_miss_player_board(coord)
+          print(self.active_player)
+          self.__switch_turns()
 
     self.__take_turn(self.turn_count) # This will replay the turn if the input was invalid otherwise it will start the next turn
 

@@ -8,7 +8,7 @@ class Player(GameObject):
     self.id = id
     self.active = active #boolean
     self.attacked_coords = []
-    self.opponent_object
+    self.opponent_object = None
     self.board = []
     self.__build_board_of_tiles(self.board)
 
@@ -41,6 +41,8 @@ class Player(GameObject):
       for i in range(1, num_ships + 1)
     ]
     self.ship_list.reverse() # Desc. order
+    print('Ship list')
+    print(self.ship_list)
 
   def selected_ship(self):
     # Return the ship that is currently selected, AKA at the front of self.ship_list
@@ -72,96 +74,18 @@ class Player(GameObject):
 
       coord = self.get_input("Hide the ship: ")
 
-      if coord in self.list_of_synonyms_for_quit_lol: # QUIT GAME?
-        exit()
+      self.quit(coord) # Quits game if the inpput is a quit command
 
-      if self.valid_coord(coord):
-        # coord = "a5"
-        # coord => GameObject.letter_to_col_index => __hide_ship(0,5) => col, row
-        # TODO: UPDATE THIS COMMENT (AND FUNCTION) FROM 05 WHEN ROW NUMBERS CHANGE
-        self.__hide_ship(int(self.letter_to_col_index[coord[0].upper()]), int(coord[1])) # Not to be confused with hide_ships()
-        # self.print_board(self.board)
-      else:
-        self.hide_ships() # This will replay the turn if the input was invalid otherwise it will start the next turn
+      if self.valid_coord_with_error_messages(coord): # If it's on the board
+        # Get integer indeces
+        row, col = self.coord_translator(coord)
+        if type(self.board[row][col]) == Tile: # If the targeted location is a vacant Tile
+          self.__hide_ship(row, col) # Not to be confused with hide_ships(). Attempt to hide the ship
 
-  def print_board(self, board):
-    print("  A B C D E F G H I J")
-    for i, row in enumerate(board, start=0): # This just prepends the numbers to the rows
-      print(f"{i} " + " ".join(row))
-
-  def attack_ships(self, coord):
-    # TODO: Attack ships
-    # need a boalean return for this so we can mark the opponents board when a hit(true)
-    row = coord[0]
-    col = coord[1]
-    if isinstance(self.opponent_objective.board[row][col],Ship):
-      self.mark_hit_opps_board(coord)
-      self.opponent_objective.board[row][col].health -= 1
-      return True
-    self.mark_miss_opps_board(coord)
-    return False
-
-  def mark_hit_opps_board(self, coord):
-    row = coord[0]
-    col = coord[1]
-    self.opps[row][col].symbol = "H"
-    return
-  
-  def mark_miss_opps_board(self, coord):
-    row = coord[0]
-    col = coord[1]
-    self.opps[row][col].symbol = "M"
-    return
-  
-  def mark_hit_player_board(self, coord):
-    row = coord[0]
-    col = coord[1]
-    self.board[row][col].symbol = "H"
-    return
-  
-  def mark_miss_player_board(self, coord):
-    row = coord[0]
-    col = coord[1]
-    self.board[row][col].symbol = "M"
-    return
-  
-  def sunk_ship_opps(self, coord):
-    row = coord[0]
-    col = coord[1]
-    if self.opps[row][col].health == 0:
-      for i in self.opps[row][col].coord:
-        ship_row = i[0]
-        ship_col = i[1]
-        self.opps[ship_row][ship_col].symbol = "S"
-    return
-  
-  def sunk_ship_player(self, coord):
-    row = coord[0]
-    col = coord[1]
-    if self.board[row][col].health == 0:
-      for i in self.board[row][col].coord:
-        ship_row = i[0]
-        ship_col = i[1]
-        self.board[ship_row][ship_col].symbol = "S"
-    return
-
-
-  def set_ship_list(self, num_ships):
-    self.ship_list = [f"1x{i}" for i in range(1, num_ships + 1)]
-    self.ship_list.reverse() # Desc. order
-    print(self.ship_list)
-
-  def selected_ship_name(self):
-    return self.ship_size_to_name[self.ship_list[0]]
-
-  def selected_ship_symbol(self):
-    return self.ship_size_to_symbol[self.ship_list[0]]
-
-  def selected_ship_size(self):
-    return int(self.ship_list[0][-1])
-
-  def __hide_ship(self, col, row):
-    self.board[row][col] = self.selected_ship_symbol() # Initial placement
+  def __hide_ship(self, row, col):
+    # Hide the selected ship
+    # ---------------------------------------------------------- #
+    self.__orient_ship(row, col) # orient and place the full length of the ship
 
     if self.selected_ship_has_been_hidden_in_a_valid_location():
       self.ship_list.pop(0) # Remove it from our list of remaining ships
@@ -169,6 +93,69 @@ class Player(GameObject):
       print("You cannot place your ship out of bounds or over another ship. Try again.")
 
     self.print_remaining_ships_to_hide()
+
+  def attack_ship(self, coord):
+    # TODO: Attack ships
+    # need a boalean return for this so we can mark the opponents board when a hit(true)
+    row = int(coord[1])
+    col = self.letter_to_col_index[coord[0].upper()]
+    if isinstance(self.opponent_object.board[row][col],Ship):
+      self.mark_hit_opps_board(coord)
+      self.opponent_object.board[row][col].hp -= 1
+      self.sunk_ship_opps(coord)
+      return True
+    self.mark_miss_opps_board(coord)
+    return False
+
+  def mark_hit_opps_board(self, coord):
+    row = int(coord[1])
+    col = self.letter_to_col_index[coord[0].upper()]
+    self.opps[row][col].symbol = "H"
+    return
+  
+  def mark_miss_opps_board(self, coord):
+    row = int(coord[1])
+    col = self.letter_to_col_index[coord[0].upper()]
+    print(row, col)
+    self.opps[row][col].symbol = "M"
+    return
+  
+  def mark_hit_player_board(self, coord):
+    row = int(coord[1])
+    col = self.letter_to_col_index[coord[0].upper()]
+    self.board[row][col].symbol = "H"
+    return
+  
+  def mark_miss_player_board(self, coord):
+    row = int(coord[1])
+    col = self.letter_to_col_index[coord[0].upper()]
+    self.board[row][col].symbol = "M"
+    return
+  
+  def sunk_ship_opps(self, coord):
+    row = int(coord[1])
+    col = self.letter_to_col_index[coord[0].upper()]
+    if self.opponent_object.board[row][col].hp == 0:
+      print("coords")
+      print(self.opponent_object.board[row][col].coords)
+      for i in self.opponent_object.board[row][col].coords:
+        ship_row = int(i[1])
+        ship_col = self.letter_to_col_index[coord[0].upper()]
+        self.opps[ship_row][ship_col].symbol = "S"
+        self.opponent_object.board[ship_row][ship_col].symbol = "S"
+        
+    return
+  
+  def sunk_ship_player(self, coord):
+    row = int(coord[1])
+    col = self.letter_to_col_index[coord[0].upper()]
+    if self.board[row][col].hp == 0:
+      for i in self.board[row][col].coords:
+        ship_row = int(i[1])
+        ship_col = self.letter_to_col_index[coord[0].upper()]
+        self.board[ship_row][ship_col].symbol = "S"
+        self.opponent_object.opps[row][col].symbol = "S"
+    return
 
   def __orient_ship(self, row, col):
     # If the selected ship length is > 1, orient the ship on the board while hiding it.
@@ -216,10 +203,6 @@ class Player(GameObject):
       "r": [row, col + i]
     }
     return direction_to_coord[direction]
-
-  def attack_ship(self, coord):
-    # TODO: Attack ships
-    return
 
   def print_ship_list(self):
     # Print the ship list
