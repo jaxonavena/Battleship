@@ -139,11 +139,10 @@ class Player(GameObject):
       print("coords")
       print(self.opponent_object.board[row][col].coords)
       for i in self.opponent_object.board[row][col].coords:
-        ship_row = int(i[1])
-        ship_col = self.letter_to_col_index[coord[0].upper()]
+        ship_row = int(i[0])
+        ship_col = int(i[1])
         self.opps[ship_row][ship_col].symbol = "S"
         self.opponent_object.board[ship_row][ship_col].symbol = "S"
-        
     return
   
   def sunk_ship_player(self, coord):
