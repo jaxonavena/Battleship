@@ -98,7 +98,7 @@ class Player(GameObject):
       self.mark_hit_opps_board(coord)
       self.opponent_objective.board[row][col].health -= 1
       return True
-    
+    self.mark_miss_opps_board(coord)
     return False
 
   def mark_hit_opps_board(self, coord):
