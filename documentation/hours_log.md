@@ -29,3 +29,4 @@
 # Peter
 
 # Pete
+- 9/11 spent about 2 hours familarizing myself with the repo then beggining to add to my section of work. Then met with jaxon to get his help with navigating the repo and refractoring the board bulid. 
