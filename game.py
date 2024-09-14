@@ -21,7 +21,7 @@ class Game(GameObject):
     self.__take_turn(1) # Start shootin
 
   def __take_turn(self, turn_count):
-    print(f" ==== Round #{turn_count} ==== Player {self.active_player.id}'s turn ====\n")
+    print(f"\n ==== Round #{turn_count} ==== Player {self.active_player.id}'s turn ====\n")
     print("Your board")
     self.print_board(self.active_player.board)
     print("Opp's board")
@@ -32,7 +32,7 @@ class Game(GameObject):
     if self.valid_coord_with_error_messages(coord):
       if coord not in self.active_player.attacked_coords: # Check if the spot has been attacked already
         self.active_player.attacked_coords.append(coord)
-        self.active_player.attack_ship(coord) # Returns T for a hit and F for a miss
+        self.active_player.attack_ship(coord)
         print("=" * 50)
         self.turn_count += 1
         self.__switch_turns()
