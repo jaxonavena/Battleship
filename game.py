@@ -33,14 +33,13 @@ class Game(GameObject):
       # Check if the spot has been attacked already
       if coord not in self.active_player.attacked_coords:
         if(self.active_player.attack_ship(coord)):
-          self.inactive_player.mark_hit_player_board(coord)
+          self.inactive_player.mark_shot(self.inactive_player.board, coord, "H") # Hit player board
           self.inactive_player.sunk_ship_player(coord)
           self.turn_count += 1
-          print(self.active_player)
           self.__switch_turns()
         else:
-          self.inactive_player.mark_miss_player_board(coord)
-          print(self.active_player)
+          self.inactive_player.mark_shot(self.inactive_player.board, coord, "M")
+          print("=" * 50)
           self.__switch_turns()
 
     self.__take_turn(self.turn_count) # This will replay the turn if the input was invalid otherwise it will start the next turn
@@ -49,18 +48,18 @@ class Game(GameObject):
     for player in self.player_bank:
       if player.active == True:
         return player
-      
+
   def get_inactive_player(self):
     for player in self.player_bank:
       if player.active == False:
         return player
-      
+
   def __setup_boards(self):
     for player in self.player_bank:
       player.hide_ships()
       print(f"Player {player.id} - All ships are hidden...")
       self.print_board(player.board) # Show their board after they're finished hiding their ships
-      print("----------------------------------\n")
+      self.br()
 
   def __set_ship_lists(self):
     while 0 >= self.num_ships or self.num_ships > 5: # Until num ships is a number 1-5

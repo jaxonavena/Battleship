@@ -1,3 +1,5 @@
+import random
+
 class GameObject:
   def __init__(self):
     self.ship_size_to_name = {
@@ -26,6 +28,20 @@ class GameObject:
       "I": 8,
       "J": 9
     }
+
+    self.hit_syns = ["Hit!", "!!! H I T !!!", "BANNNNNNNNNNNGGGGGGGG!", "Bullseye!", "Noiiiiiiiceeee one mate"]
+    self.miss_syns = ["Miss!", "You missed.", "L", "oof", "Go fish?", "BLOCKED BY JAMES!!!"]
+
+  def br(self, char="=", gap=0):
+    # Will print a breakline of = or any other char passed
+    # Gap is the space between each print of the char
+    # If char is H or M then it will select a corresponding phrase in synonymizer_inator()
+    symbol = (self.synonymizer_inator(char) if char in ["H", "M"] else char) + (" " * gap)
+    print("\n" + (symbol * 50) + "\n")
+
+  def synonymizer_inator(self, char):
+    return random.choice(self.hit_syns) if char == "H" else random.choice(self.miss_syns) # Grab a hit/miss phrase
+
 
   def valid_coord_with_error_messages(self, coord): # Is this a valid coord? Takes LetterNumber combo coordinates (e.g. A8)
     try:

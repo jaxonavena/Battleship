@@ -22,6 +22,11 @@
 - Met with Pete and helped do some work on his part. I then refactored the whole repo for several hours. The main work that was done was changing the board to be more dynamic by including the new Tile and Ship class on the board, instead of just regular strings. I also refactored the hiding mechanics to be transactional and only accept transactions where all the coords the ship is attempting to be placed on are valid. This prevents a ship from being overlapped or going off the board. I actually just realized there's a bug where the initial placement can overlap a ship. Oops. I'll have to fix that tomorrow.
 ```
 
+9/13 2 hours
+```
+- Team meeting and refactored a bunch of stuff
+```
+
 # Achraf
 
 # Timi
@@ -29,4 +34,4 @@
 # Peter
 
 # Pete
-- 9/11 spent about 2 hours familarizing myself with the repo then beggining to add to my section of work. Then met with jaxon to get his help with navigating the repo and refractoring the board bulid. 
+- 9/11 spent about 2 hours familarizing myself with the repo then beggining to add to my section of work. Then met with jaxon to get his help with navigating the repo and refractoring the board bulid.

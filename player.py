@@ -16,6 +16,7 @@ class Player(GameObject):
     self.__build_board_of_tiles(self.opps)
 
     self.ship_list = []
+    self.has_printed_shot_result_this_turn = False
 
   def set_opponent(self,opponent):
     self.opponent_object = opponent
@@ -41,8 +42,6 @@ class Player(GameObject):
       for i in range(1, num_ships + 1)
     ]
     self.ship_list.reverse() # Desc. order
-    print('Ship list')
-    print(self.ship_list)
 
   def selected_ship(self):
     # Return the ship that is currently selected, AKA at the front of self.ship_list
@@ -95,59 +94,38 @@ class Player(GameObject):
     self.print_remaining_ships_to_hide()
 
   def attack_ship(self, coord):
-    # TODO: Attack ships
     # need a boalean return for this so we can mark the opponents board when a hit(true)
-    row = int(coord[1])
-    col = self.letter_to_col_index[coord[0].upper()]
+    row, col = self.coord_translator(coord)
     if isinstance(self.opponent_object.board[row][col],Ship):
-      self.mark_hit_opps_board(coord)
+      self.mark_shot(self.board, coord, "H") # Hit your board
       self.opponent_object.board[row][col].hp -= 1
       self.sunk_ship_opps(coord)
       return True
-    self.mark_miss_opps_board(coord)
+    self.mark_shot(self.opps, coord, "M") # Miss opps board
     return False
 
-  def mark_hit_opps_board(self, coord):
-    row = int(coord[1])
-    col = self.letter_to_col_index[coord[0].upper()]
-    self.opps[row][col].symbol = "H"
-    return
-  
-  def mark_miss_opps_board(self, coord):
-    row = int(coord[1])
-    col = self.letter_to_col_index[coord[0].upper()]
-    print(row, col)
-    self.opps[row][col].symbol = "M"
-    return
-  
-  def mark_hit_player_board(self, coord):
-    row = int(coord[1])
-    col = self.letter_to_col_index[coord[0].upper()]
-    self.board[row][col].symbol = "H"
-    return
-  
-  def mark_miss_player_board(self, coord):
-    row = int(coord[1])
-    col = self.letter_to_col_index[coord[0].upper()]
-    self.board[row][col].symbol = "M"
-    return
-  
+  def mark_shot(self, board, coord, result):
+    row, col = self.coord_translator(coord)
+    board[row][col].symbol = result
+    self.print_shot_result(result)
+
+  def print_shot_result(self, result):
+    self.br()
+    self.br(result, gap = 5)
+    self.has_printed_shot_result_this_turn = True
+
   def sunk_ship_opps(self, coord):
-    row = int(coord[1])
-    col = self.letter_to_col_index[coord[0].upper()]
+    row, col = self.coord_translator(coord)
     if self.opponent_object.board[row][col].hp == 0:
-      print("coords")
-      print(self.opponent_object.board[row][col].coords)
       for i in self.opponent_object.board[row][col].coords:
         ship_row = int(i[0])
         ship_col = int(i[1])
         self.opps[ship_row][ship_col].symbol = "S"
         self.opponent_object.board[ship_row][ship_col].symbol = "S"
     return
-  
+
   def sunk_ship_player(self, coord):
-    row = int(coord[1])
-    col = self.letter_to_col_index[coord[0].upper()]
+    row, col = self.coord_translator(coord)
     if self.board[row][col].hp == 0:
       for i in self.board[row][col].coords:
         ship_row = int(i[1])
