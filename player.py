@@ -7,18 +7,18 @@ class Player(GameObject):
     super().__init__()
     self.id = id
     self.active = active #boolean
-    self.attacked_coords = []
-    self.opponent_object = None
     self.board = []
     self.__build_board_of_tiles(self.board)
-
-    self.opps = []
-    self.__build_board_of_tiles(self.opps)
-
+    self.attacked_coords = []
     self.ship_list = []
 
+    # Opponent information
+    self.opp = None # The other Player
+    self.opps_board = [] # Board to track where you have fired at your opponent
+    self.__build_board_of_tiles(self.opps_board)
+
   def set_opponent(self,opponent):
-    self.opponent_object = opponent
+    self.opp = opponent
 
   def __build_board_of_tiles(self, board):
     # Fills out a given list with 10 nested lists of 10 Tile items
@@ -72,8 +72,6 @@ class Player(GameObject):
 
       coord = self.get_input("Hide the ship: ")
 
-      self.quit(coord) # Quits game if the inpput is a quit command
-
       if self.valid_coord_with_error_messages(coord): # If it's on the board
         # Get integer indeces
         row, col = self.coord_translator(coord)
@@ -95,18 +93,31 @@ class Player(GameObject):
   def attack_ship(self, coord):
     # need a boalean return for this so we can mark the opponents board when a hit(true)
     row, col = self.coord_translator(coord)
-    if isinstance(self.opponent_object.board[row][col],Ship):
-      self.mark_shot(self.board, coord, "H") # Hit your board
-      self.opponent_object.board[row][col].hp -= 1
-      self.sunk_ship_opps(coord)
+    if isinstance(self.opp.board[row][col],Ship):
+      self.hit(coord)
       return True
-    self.mark_shot(self.opps, coord, "M") # Miss opps board
-    return False
+    else:
+      self.miss(coord)
+      return False
+
+  def hit(self, coord):
+    row, col = self.coord_translator(coord)
+    self.mark_shot(self.opps_board, coord, "H") # Hit your opponent's ship. Tracking it for yourself.
+    self.mark_shot(self.opp.board, coord, "H") # Hit your opponent's ship. Update their board
+    self.opp.sunk_ship_player(coord) # Change symbol to S if ship is sunk
+    self.opp.board[row][col].hp -= 1 # Decrement oponnent's ship health
+    self.sunk_ship_opps(coord)
+
+  def miss(self, coord):
+    self.mark_shot(self.opps_board, coord, "M") # Missed your opponent's ship. Tracking it for yourself.
+    self.mark_shot(self.opp.board, coord, "M") # Missed your opponent's ship. Update their board
 
   def mark_shot(self, board, coord, result):
     row, col = self.coord_translator(coord)
     board[row][col].symbol = result
-    self.print_shot_result(result)
+
+    if board == self.opps_board:
+      self.print_shot_result(result)
 
   def print_shot_result(self, result):
     self.br()
@@ -114,13 +125,12 @@ class Player(GameObject):
 
   def sunk_ship_opps(self, coord):
     row, col = self.coord_translator(coord)
-    if self.opponent_object.board[row][col].hp == 0:
-      for i in self.opponent_object.board[row][col].coords:
+    if self.opp.board[row][col].hp == 0:
+      for i in self.opp.board[row][col].coords:
         ship_row = int(i[0])
         ship_col = int(i[1])
-        self.opps[ship_row][ship_col].symbol = "S"
-        self.opponent_object.board[ship_row][ship_col].symbol = "S"
-    return
+        self.opps_board[ship_row][ship_col].symbol = "S"
+        self.opp.board[ship_row][ship_col].symbol = "S"
 
   def sunk_ship_player(self, coord):
     row, col = self.coord_translator(coord)
@@ -129,8 +139,7 @@ class Player(GameObject):
         ship_row = int(i[1])
         ship_col = self.letter_to_col_index[coord[0].upper()]
         self.board[ship_row][ship_col].symbol = "S"
-        self.opponent_object.opps[row][col].symbol = "S"
-    return
+        self.opp.opps_board[row][col].symbol = "S"
 
   def __orient_ship(self, row, col):
     # If the selected ship length is > 1, orient the ship on the board while hiding it.
@@ -139,12 +148,15 @@ class Player(GameObject):
     # l: left
     # r: right
     # ---------------------------------------------------------- #
-    print("u = Up\nd = Down\nl = Left\nr = Right")
 
     direction = "" # Init for while loop
     while direction not in ["u","d","l","r"]:
-      # Default for 1x1 ships to orient themselves
-      direction = input("Which direction do you want your ship to be oriented?: ").lower() if self.selected_ship_length() > 1 else "u"
+      if self.selected_ship_length() > 1:
+        print("u = Up\nd = Down\nl = Left\nr = Right")
+        direction = input("Which direction do you want your ship to be oriented?: ").lower()
+      else:
+        # Default for 1x1 ships to orient themselves
+        direction = "u"
 
       if direction in ["u","d","l","r"]:
         for i in range(self.selected_ship_length()):

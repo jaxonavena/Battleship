@@ -33,8 +33,9 @@ class GameObject:
     self.miss_syns = ["Miss!", "You missed.", "L", "oof", "Go fish?", "BLOCKED BY JAMES!!!"]
 
   def br(self, char="=", gap=0):
+    # br like HTML <br>
     # Will print a breakline of = or any other char passed
-    # Gap is the space between each print of the char
+    # Gap is the white space between each print of the char
     # If char is H or M then it will select a corresponding phrase in synonymizer_inator()
     char = (self.synonymizer_inator(char) if char in ["H", "M"] else char) + (" " * gap)
     print("\n" + (char * 50) + "\n")

@@ -12,7 +12,7 @@ class Game(GameObject):
 
   def __switch_turns(self): # Switch who is activated
     for player in self.player_bank:
-      player.active = not player.active
+      player.active = (not player.active)
     self.active_player = self.get_active_player()
 
   def start(self):
@@ -21,26 +21,20 @@ class Game(GameObject):
     self.__take_turn(1) # Start shootin
 
   def __take_turn(self, turn_count):
-    print(f"Turn #{turn_count}")
+    print(f" ==== Round #{turn_count} ==== Player {self.active_player.id}'s turn ====\n")
     print("Your board")
     self.print_board(self.active_player.board)
-    print("Opps board")
-    self.print_board(self.active_player.opps)
+    print("Opp's board")
+    self.print_board(self.active_player.opps_board)
 
-    coord = self.get_input(f"Player {self.active_player.id}'s turn: ")
+    coord = self.get_input(f"Player {self.active_player.id} -- Attack a coordinate: ")
 
     if self.valid_coord_with_error_messages(coord):
-      # Check if the spot has been attacked already
-      if coord not in self.active_player.attacked_coords:
-        if(self.active_player.attack_ship(coord)):
-          self.inactive_player.mark_shot(self.inactive_player.board, coord, "H") # Hit player board
-          self.inactive_player.sunk_ship_player(coord)
-          self.turn_count += 1
-          self.__switch_turns()
-        else:
-          self.inactive_player.mark_shot(self.inactive_player.board, coord, "M")
-          print("=" * 50)
-          self.__switch_turns()
+      if coord not in self.active_player.attacked_coords: # Check if the spot has been attacked already
+        self.active_player.attack_ship(coord) # Returns T for a hit and F for a miss
+        print("=" * 50)
+        self.turn_count += 1
+        self.__switch_turns()
 
     self.__take_turn(self.turn_count) # This will replay the turn if the input was invalid otherwise it will start the next turn
 
