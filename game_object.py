@@ -36,8 +36,8 @@ class GameObject:
     # Will print a breakline of = or any other char passed
     # Gap is the space between each print of the char
     # If char is H or M then it will select a corresponding phrase in synonymizer_inator()
-    symbol = (self.synonymizer_inator(char) if char in ["H", "M"] else char) + (" " * gap)
-    print("\n" + (symbol * 50) + "\n")
+    char = (self.synonymizer_inator(char) if char in ["H", "M"] else char) + (" " * gap)
+    print("\n" + (char * 50) + "\n")
 
   def synonymizer_inator(self, char):
     return random.choice(self.hit_syns) if char == "H" else random.choice(self.miss_syns) # Grab a hit/miss phrase

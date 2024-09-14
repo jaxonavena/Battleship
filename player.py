@@ -16,7 +16,6 @@ class Player(GameObject):
     self.__build_board_of_tiles(self.opps)
 
     self.ship_list = []
-    self.has_printed_shot_result_this_turn = False
 
   def set_opponent(self,opponent):
     self.opponent_object = opponent
@@ -112,7 +111,6 @@ class Player(GameObject):
   def print_shot_result(self, result):
     self.br()
     self.br(result, gap = 5)
-    self.has_printed_shot_result_this_turn = True
 
   def sunk_ship_opps(self, coord):
     row, col = self.coord_translator(coord)
