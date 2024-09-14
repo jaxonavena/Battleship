@@ -31,17 +31,26 @@ class GameObject:
 
     self.hit_syns = ["Hit!", "!!! H I T !!!", "BANNNNNNNNNNNGGGGGGGG!", "Bullseye!", "Noiiiiiiiceeee one mate"]
     self.miss_syns = ["Miss!", "You missed.", "L", "oof", "Go fish?", "BLOCKED BY JAMES!!!"]
+    self.sink_syns = ["Nice Sink!"]
+    self.win_syns = ["Sweet Victory!", "Winner! Winner! Chicken Dinner!", "congrats bro", "Might be the Greatest", "Proved Me Wrong"]
 
   def br(self, char="=", gap=0):
     # br like HTML <br>
     # Will print a breakline of = or any other char passed
     # Gap is the white space between each print of the char
     # If char is H or M then it will select a corresponding phrase in synonymizer_inator()
-    char = (self.synonymizer_inator(char) if char in ["H", "M"] else char) + (" " * gap)
+    char = (self.synonymizer_inator(char) if char in ["H", "M", "S", "W"] else char) + (" " * gap)
     print("\n" + (char * 50) + "\n")
 
   def synonymizer_inator(self, char):
-    return random.choice(self.hit_syns) if char == "H" else random.choice(self.miss_syns) # Grab a hit/miss phrase
+    if char == "S":
+      return random.choice(self.sink_syns)
+    elif char == "M": 
+      return random.choice(self.miss_syns) # Grab a hit/miss phrase
+    elif char == "W":
+      return random.choice(self.win_syns)
+    else:
+      return random.choice(self.hit_syns)
 
 
   def valid_coord_with_error_messages(self, coord): # Is this a valid coord? Takes LetterNumber combo coordinates (e.g. A8)
@@ -80,10 +89,13 @@ class GameObject:
   def print_board(self, board):
     # Prints a given board with the rows and columns labeled
     # ---------------------------------------------------------- #
-    print("  A B C D E F G H I J")
+    print("   A B C D E F G H I J")
     for i, row in enumerate(board): # This just prepends the numbers to the rows
       tiles_as_strings = [str(tile) for tile in row]
-      print(f"{i} " + " ".join(tiles_as_strings))
+      if i < 9:
+        print(f" {i+1} " + " ".join(tiles_as_strings))
+      else:
+        print(f"{i+1} " + " ".join(tiles_as_strings))
 
   def quit(self, input):
     if input in ["exit", "q", "quit", "EXIT", "Q", "QUIT"]:
@@ -91,6 +103,10 @@ class GameObject:
 
   def get_input(self, message):
     my_input = input(message)
+    my_input = [my_input[0], my_input[1]]
+    my_input[1] = int(my_input[1]) - 1
+    my_input[1] = str(my_input[1])
+    my_input = ''.join(my_input)
 
     self.quit(my_input) # Quits game if the input is a quit command
     return my_input

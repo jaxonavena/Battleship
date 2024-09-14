@@ -18,9 +18,13 @@ class Game(GameObject):
   def start(self):
     self.__set_ship_lists() # Determine the number of ships each player will have and set the list
     self.__setup_boards() # Hide the ships
+    self.player1.set_ship_list(self.num_ships)
+    self.player2.set_ship_list(self.num_ships)
     self.__take_turn(1) # Start shootin
 
   def __take_turn(self, turn_count):
+    if self.active_player.ship_list == []:
+      self.game_end()
     print(f" ==== Round #{turn_count} ==== Player {self.active_player.id}'s turn ====\n")
     print("Your board")
     self.print_board(self.active_player.board)
@@ -68,3 +72,9 @@ class Game(GameObject):
 
     self.player1.set_ship_list(self.num_ships)
     self.player2.set_ship_list(self.num_ships)
+  
+  def game_end(self):
+    self.br()
+    self.br("W", gap = 5)
+    self.br()
+    exit()

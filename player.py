@@ -106,18 +106,24 @@ class Player(GameObject):
     self.mark_shot(self.opp.board, coord, "H") # Hit your opponent's ship. Update their board
     self.opp.sunk_ship_player(coord) # Change symbol to S if ship is sunk
     self.opp.board[row][col].hp -= 1 # Decrement oponnent's ship health
-    self.sunk_ship_opps(coord)
+    if self.opp.board[row][col].hp == 0:
+      self.print_shot_result("S")
+      self.sunk_ship_opps(coord)
+      self.opp.ship_list.pop()
+    else:
+      self.print_shot_result("H")
 
   def miss(self, coord):
     self.mark_shot(self.opps_board, coord, "M") # Missed your opponent's ship. Tracking it for yourself.
     self.mark_shot(self.opp.board, coord, "M") # Missed your opponent's ship. Update their board
+    self.print_shot_result("M")
 
   def mark_shot(self, board, coord, result):
     row, col = self.coord_translator(coord)
     board[row][col].symbol = result
 
-    if board == self.opps_board:
-      self.print_shot_result(result)
+    #if board == self.opps_board:
+     # self.print_shot_result(result)
 
   def print_shot_result(self, result):
     self.br()
