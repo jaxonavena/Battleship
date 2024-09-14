@@ -31,10 +31,13 @@ class Game(GameObject):
 
     if self.valid_coord_with_error_messages(coord):
       if coord not in self.active_player.attacked_coords: # Check if the spot has been attacked already
+        self.active_player.attacked_coords.append(coord)
         self.active_player.attack_ship(coord) # Returns T for a hit and F for a miss
         print("=" * 50)
         self.turn_count += 1
         self.__switch_turns()
+      else:
+        print("Space already taken. Try again!")
 
     self.__take_turn(self.turn_count) # This will replay the turn if the input was invalid otherwise it will start the next turn
 
