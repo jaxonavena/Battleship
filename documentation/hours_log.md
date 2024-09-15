@@ -80,6 +80,10 @@ Met with the team to talk about what was left to be done. The main problems left
 ```
 Implemented end game logic so that the right person wins when all the opponent's ships are sunk. Met up with Jaxon to work together and make sure we could resolve conflicts since we were both working at the same time. We also worked on the previous bug where the player's board wouldn't appear correctly, but Jaxon was able to fix it.
 ```
+-9/15 1 hour
+```
+Fixed a bug where row 10 would be recognized as row 1 when inputting coordinates and adjusted the board's spacing for the number 10 by offsetting the other rows by a space.
+```
 
 # Pete
 

@@ -126,9 +126,9 @@ class GameObject:  # Define the GameObject class
         stringified_objs.append(obj.symbol)
       # Print the row number and the symbols for that row
       if row < 9:
-        print(f" {row + 1}  " + " ".join(stringified_objs))
+        print(f" {row + 1}  " + " ".join(stringified_objs)) # if statements to adjust spacing of the board for row 10
       else:
-        print(f"{row + 1}  " + " ".join(stringified_objs))
+        print(f"{row + 1}  " + " ".join(stringified_objs)) # this is the spacing for row 10
       row += 1  # Increment the row counter
 
   # Method to check if the user wants to quit the game
