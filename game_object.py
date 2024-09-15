@@ -35,6 +35,13 @@ class GameObject:
     self.sink_syns = ["Nice Sink!"]
     self.win_syns = ["Sweet Victory!", "Winner! Winner! Chicken Dinner!", "congrats bro", "Might be the Greatest", "Proved Me Wrong"]
 
+    self.syns = {
+      "M": self.miss_syns,
+      "H": self.hit_syns,
+      "S": self.sink_syns,
+      "W": self.win_syns
+    }
+
   def br(self, char="=", gap=0):
     # br like HTML <br>
     # Will print a breakline of = or any other char passed
@@ -44,16 +51,9 @@ class GameObject:
     print("\n" + (char * 50) + "\n")
 
   def synonymizer_inator(self, char):
-    if char == "S":
-      return random.choice(self.sink_syns)
-    elif char == "M": 
-      return random.choice(self.miss_syns) # Grab a hit/miss phrase
-    elif char == "W":
-      return random.choice(self.win_syns)
-    else:
-      return random.choice(self.hit_syns)
+    return random.choice(self.syns[char])
 
-  def valid_coord_with_error_messages(self, coord): # Is this a valid coord? Takes LetterNumber combo coordinates (e.g. A8)
+  def valid_coord(self, coord): # Is this a valid coord? Takes LetterNumber combo coordinates (e.g. A8)
     try:
       col = coord[0].upper() # Assume it's a letter
       row = int(coord[1:]) # Assume it's a number, grab everything after the column letter
@@ -72,13 +72,10 @@ class GameObject:
     return True
 
   def coords_are_inbounds(self, coords):
-      flag = False
-      for tile in coords:
-        if tile.row > 9 or tile.row < 0 or tile.col > 9 or tile.col < 0:
+      for coord in coords:
+        if coord[0] > 9 or coord[0] < 0 or coord[1] > 9 or coord[1] < 0:
           return False
-        else:
-          flag = True
-      return flag
+      return True
 
   def coord_translator(self, coord):
     # e.g. coord = A8
@@ -96,7 +93,7 @@ class GameObject:
       col = 0
       for obj in row_list:
         if isinstance(obj, Ship):
-          for tile in obj.coords: # for literal Tile in the selected Ship.coords
+          for tile in obj.tiles: # for literal Tile in the selected Ship.tiles
             if tile.row == row and tile.col == col: # if the current coords match the Tile's coords
               obj = tile
         col += 1
@@ -110,10 +107,6 @@ class GameObject:
 
   def get_input(self, message):
     my_input = input(message)
-    my_input = [my_input[0], my_input[1]]
-    my_input[1] = int(my_input[1]) - 1
-    my_input[1] = str(my_input[1])
-    my_input = ''.join(my_input)
 
     self.quit(my_input) # Quits game if the input is a quit command
     return my_input

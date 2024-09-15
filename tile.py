@@ -4,6 +4,9 @@ class Tile:
     self.col = col
     self.symbol = " "
 
+  def is_sunk(self):
+    return False
+
   def str(self):
     return self.symbol
 

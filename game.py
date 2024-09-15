@@ -15,15 +15,17 @@ class Game(GameObject):
     self.active_player = self.get_active_player()
 
   def start(self):
-    self.__set_ship_lists() # Determine the number of ships each player will have and set the list
+    self.__get_num_ships() # Determine the number of ships each player will have
+    self.__set_ship_lists() # Generate the list of ships for each player. We pop off each ship as we hide it.
     self.__setup_boards() # Hide the ships
-    self.player1.set_ship_list(self.num_ships)
-    self.player2.set_ship_list(self.num_ships)
+
+    self.__set_ship_lists() # Regenerate the ship lists so we can pop them off as they sink.
     self.__take_turn(1) # Start shootin
 
   def __take_turn(self, turn_count):
     if self.active_player.ship_list == []:
-      self.game_end()
+      self.end_game()
+
     print(f"\n ==== Round #{turn_count} ==== Player {self.active_player.id}'s turn ====\n")
     print("Your board")
     self.print_board(self.active_player.board)
@@ -32,7 +34,7 @@ class Game(GameObject):
 
     coord = self.get_input(f"Player {self.active_player.id} -- Attack a coordinate: ")
 
-    if self.valid_coord_with_error_messages(coord):
+    if self.valid_coord(coord):
       if coord not in self.active_player.attacked_coords: # Check if the spot has been attacked already
         self.active_player.attacked_coords.append(coord)
         self.active_player.attack_ship(coord)
@@ -56,7 +58,7 @@ class Game(GameObject):
       self.print_board(player.board) # Show their board after they're finished hiding their ships
       self.br()
 
-  def __set_ship_lists(self):
+  def __get_num_ships(self):
     while 0 >= self.num_ships or self.num_ships > 5: # Until num ships is a number 1-5
       print("Please enter a number between 1 and 5.")
       try:
@@ -64,11 +66,13 @@ class Game(GameObject):
       except:
         self.num_ships = 0
 
+  def __set_ship_lists(self):
     self.player1.set_ship_list(self.num_ships)
     self.player2.set_ship_list(self.num_ships)
-  
-  def game_end(self):
+
+  def end_game(self):
     self.br()
     self.br("W", gap = 5)
     self.br()
+    print(f"Player {self.active_player.opp.id} wins!")
     exit()
