@@ -99,7 +99,10 @@ class GameObject:  # Define the GameObject class
     # Convert column letter to index
     col = self.letter_to_col_index[coord[0].upper()]
     # Convert row number to index (subtract 1 for zero-based indexing)
-    row = int(coord[1]) - 1
+    if len(coord) == 2:
+      row = int(coord[1]) - 1
+    else:
+      row = 9
     # Return row and column as indices
     return row, col
 
