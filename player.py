@@ -99,9 +99,9 @@ class Player(GameObject):
     row, col = self.coord_translator(coord)
     self.mark_shot(self.opps_board, coord, "H") # Hit your opponent's ship. Tracking it for yourself.
     self.mark_shot(self.opp.board, coord, "H") # Hit your opponent's ship. Update their board
-    self.opp.sunk_ship_player(coord) # Change symbol to S if ship is sunk
     self.opp.board[row][col].hp -= 1 # Decrement opponent's ship health
-    self.sunk_ship_opps(coord)
+    self.update_sunk_ship(self, self.opp, coord)
+
 
   def miss(self, coord):
     self.mark_shot(self.opps_board, coord, "M") # Missed your opponent's ship. Tracking it for yourself.
@@ -111,49 +111,36 @@ class Player(GameObject):
     row, col = self.coord_translator(coord)
 
     obj = board[row][col] # Either a Tile or Ship
-    print(f"object: {type(obj)}")
     if isinstance(obj, Ship):
-      print("SHIP")
       for tile in obj.coords: # for literal Tile in the selected Ship.coords
-        print(f"A Tile in coords: {tile}")
-        print(f"Tile.row: {tile.row}")
-        print(f"Tile.col: {tile.col}")
-        print(f"Row: {row}")
-        print(f"Col: {col}")
-
         if tile.row == row and tile.col == col: # if the coordinates to be marked match the Tile's coordinates
           obj = tile
-          print("poop")
-          print(type(obj))
-          print(obj)
 
-      obj.symbol = result
-      print(f"Obj symbol after updating to result: {obj.symbol}")
+    obj.symbol = result
 
-    if board == self.opps_board:
+    if board == self.opps_board: # Mark shot is called twice per hit/miss, so we only want to print the result once
       self.print_shot_result(result)
 
   def print_shot_result(self, result):
     self.br()
     self.br(result, gap = 5)
 
-  def sunk_ship_opps(self, coord):
-    row, col = self.coord_translator(coord)
-    if self.opp.board[row][col].hp == 0:
-      for i in self.opp.board[row][col].coords:
-        ship_row = int(i[0])
-        ship_col = int(i[1])
-        self.opps_board[ship_row][ship_col].symbol = "S"
-        self.opp.board[ship_row][ship_col].symbol = "S"
+  def update_board(self, sinking_player, other_player, row, col):
+    for tile in sinking_player.board[row][col].coords:
+      other_player.opps_board[tile.row][tile.col].symbol = "S"
+      sinking_player.board[tile.row][tile.col].sink()
 
-  def sunk_ship_player(self, coord):
+  def update_sunk_ship(self, player, opponent, coord):
     row, col = self.coord_translator(coord)
-    if self.board[row][col].hp == 0:
-      for i in self.board[row][col].coords:
-        ship_row = int(i[1])
-        ship_col = self.letter_to_col_index[coord[0].upper()]
-        self.board[ship_row][ship_col].symbol = "S"
-        self.opp.opps_board[row][col].symbol = "S"
+
+    # Check if the opponent's ship is sunk
+    if opponent.board[row][col].is_sunk():
+      self.update_board(opponent, player, row, col)
+
+    # Check if the player's ship is sunk
+    elif player.board[row][col].is_sunk():
+      self.update_board(player, opponent, row, col)
+
 
   def __orient_ship(self, row, col):
     # If the selected ship length is > 1, orient the ship on the board while hiding it.

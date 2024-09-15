@@ -56,7 +56,7 @@ class GameObject:
       print("Invalid Coordinate. Ensure your input starts with a valid column header (e.g. E4)")
       return False
 
-    if row not in range(0,10):
+    if row not in range(1,11):
       print("Invalid Coordinate. Ensure your input lies within the bounds of the 10x10 board.")
       return False
 
@@ -74,13 +74,13 @@ class GameObject:
   def coord_translator(self, coord):
     # e.g. coord = A8
     col = self.letter_to_col_index[coord[0].upper()] # Letters are columns
-    row = int(coord[1]) # Numbers are rows
+    row = int(coord[1]) - 1 # Numbers are rows
     return row, col #return row number, column number to use as indeces
 
   def print_board(self, board):
     # Prints a given board with the rows and columns labeled
     # ---------------------------------------------------------- #
-    print("  A B C D E F G H I J")
+    print("   A B C D E F G H I J")
     row = 0
     for row_list in board:
       stringified_objs = []
@@ -92,7 +92,7 @@ class GameObject:
               obj = tile
         col += 1
         stringified_objs.append(obj.symbol)
-      print(f"{row} " + " ".join(stringified_objs))
+      print(f"{row + 1}  " + " ".join(stringified_objs))
       row += 1
 
 

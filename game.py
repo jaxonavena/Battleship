@@ -7,7 +7,6 @@ class Game(GameObject):
     self.player2 = player_bank[1]
     self.turn_count = 1
     self.active_player = self.get_active_player()
-    self.inactive_player = self.get_inactive_player()
     self.num_ships = 0
 
   def __switch_turns(self): # Switch who is activated
@@ -44,11 +43,6 @@ class Game(GameObject):
   def get_active_player(self):
     for player in self.player_bank:
       if player.active == True:
-        return player
-
-  def get_inactive_player(self):
-    for player in self.player_bank:
-      if player.active == False:
         return player
 
   def __setup_boards(self):
