@@ -27,6 +27,11 @@
 - Team meeting and refactored a bunch of stuff
 ```
 
+9/14 7.5 hours
+```
+- Had to refactor a bunch of the game. Resolved a major bug where if one part of the ship was hit then the whole thing would say it was hit. Peter helped.
+```
+
 # Achraf
 
 # Timi
