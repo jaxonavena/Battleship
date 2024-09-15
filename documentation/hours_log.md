@@ -66,9 +66,22 @@ Added comments and documentations
 # Timi
 
 # Peter
+- 9/10 2 hours
+```
+Had a team meeting where we went over the setup code that Jaxon made and talked about who was going to implement which features moving forward. We also talked about a bug Jaxon found where you weren't able to hide the correct amount of ships
+
+Later that evening, I fixed the bug and pushed it to the repo
+```
+- 9/12 15 minutes, GTA meeting
+- 9/13 1 hour
+```
+Met with the team to talk about what was left to be done. The main problems left were a bug where the player's board would not appear correctly when a hit occurred and adding logic for the game to end when all ships were sunk.
+```
+- 9/14 5 hours 
+```
+Implemented end game logic so that the right person wins when all the opponent's ships are sunk. Met up with Jaxon to work together and make sure we could resolve conflicts since we were both working at the same time. We also worked on the previous bug where the player's board wouldn't appear correctly, but Jaxon was able to fix it.
+```
 
 # Pete
 
 - 9/11 spent about 2 hours familarizing myself with the repo then beggining to add to my section of work. Then met with jaxon to get his help with navigating the repo and refractoring the board bulid.
-- 9/13 1 hour meeting wiht the team to plan finishing touches
-- 9/14 5 hours, working on end game logic and bugs from previous builds. Also adding responses to different player actions.
