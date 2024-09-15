@@ -7,7 +7,6 @@ class Game(GameObject):
     self.player2 = player_bank[1]
     self.turn_count = 1
     self.active_player = self.get_active_player()
-    self.inactive_player = self.get_inactive_player()
     self.num_ships = 0
 
   def __switch_turns(self): # Switch who is activated
@@ -25,7 +24,7 @@ class Game(GameObject):
   def __take_turn(self, turn_count):
     if self.active_player.ship_list == []:
       self.game_end()
-    print(f" ==== Round #{turn_count} ==== Player {self.active_player.id}'s turn ====\n")
+    print(f"\n ==== Round #{turn_count} ==== Player {self.active_player.id}'s turn ====\n")
     print("Your board")
     self.print_board(self.active_player.board)
     print("Opp's board")
@@ -36,7 +35,7 @@ class Game(GameObject):
     if self.valid_coord_with_error_messages(coord):
       if coord not in self.active_player.attacked_coords: # Check if the spot has been attacked already
         self.active_player.attacked_coords.append(coord)
-        self.active_player.attack_ship(coord) # Returns T for a hit and F for a miss
+        self.active_player.attack_ship(coord)
         print("=" * 50)
         self.turn_count += 1
         self.__switch_turns()
@@ -48,11 +47,6 @@ class Game(GameObject):
   def get_active_player(self):
     for player in self.player_bank:
       if player.active == True:
-        return player
-
-  def get_inactive_player(self):
-    for player in self.player_bank:
-      if player.active == False:
         return player
 
   def __setup_boards(self):

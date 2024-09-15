@@ -93,25 +93,14 @@ class Player(GameObject):
   def attack_ship(self, coord):
     # need a boalean return for this so we can mark the opponents board when a hit(true)
     row, col = self.coord_translator(coord)
-    if isinstance(self.opp.board[row][col],Ship):
-      self.hit(coord)
-      return True
-    else:
-      self.miss(coord)
-      return False
+    self.hit(coord) if isinstance(self.opp.board[row][col], Ship) else  self.miss(coord)
 
   def hit(self, coord):
     row, col = self.coord_translator(coord)
     self.mark_shot(self.opps_board, coord, "H") # Hit your opponent's ship. Tracking it for yourself.
     self.mark_shot(self.opp.board, coord, "H") # Hit your opponent's ship. Update their board
-    self.opp.sunk_ship_player(coord) # Change symbol to S if ship is sunk
-    self.opp.board[row][col].hp -= 1 # Decrement oponnent's ship health
-    if self.opp.board[row][col].hp == 0:
-      self.print_shot_result("S")
-      self.sunk_ship_opps(coord)
-      self.opp.ship_list.pop()
-    else:
-      self.print_shot_result("H")
+    self.opp.board[row][col].hp -= 1 # Decrement opponent's ship health
+    self.update_sunk_ship(self, self.opp, coord)
 
   def miss(self, coord):
     self.mark_shot(self.opps_board, coord, "M") # Missed your opponent's ship. Tracking it for yourself.
@@ -120,32 +109,37 @@ class Player(GameObject):
 
   def mark_shot(self, board, coord, result):
     row, col = self.coord_translator(coord)
-    board[row][col].symbol = result
+    obj = board[row][col] # Either a Tile or Ship
+    if isinstance(obj, Ship):
+      for tile in obj.coords: # for literal Tile in the selected Ship.coords
+        if tile.row == row and tile.col == col: # if the coordinates to be marked match the Tile's coordinates
+          obj = tile
 
-    #if board == self.opps_board:
-     # self.print_shot_result(result)
+    obj.symbol = result
+
+    if board == self.opps_board: # Mark shot is called twice per hit/miss, so we only want to print the result once
+      self.print_shot_result(result)
 
   def print_shot_result(self, result):
     self.br()
     self.br(result, gap = 5)
 
-  def sunk_ship_opps(self, coord):
-    row, col = self.coord_translator(coord)
-    if self.opp.board[row][col].hp == 0:
-      for i in self.opp.board[row][col].coords:
-        ship_row = int(i[0])
-        ship_col = int(i[1])
-        self.opps_board[ship_row][ship_col].symbol = "S"
-        self.opp.board[ship_row][ship_col].symbol = "S"
+  def update_board(self, sinking_player, other_player, row, col):
+    for tile in sinking_player.board[row][col].coords:
+      other_player.opps_board[tile.row][tile.col].symbol = "S"
+      sinking_player.board[tile.row][tile.col].sink()
 
-  def sunk_ship_player(self, coord):
+  def update_sunk_ship(self, player, opponent, coord):
     row, col = self.coord_translator(coord)
-    if self.board[row][col].hp == 0:
-      for i in self.board[row][col].coords:
-        ship_row = int(i[1])
-        ship_col = self.letter_to_col_index[coord[0].upper()]
-        self.board[ship_row][ship_col].symbol = "S"
-        self.opp.opps_board[row][col].symbol = "S"
+
+    # Check if the opponent's ship is sunk
+    if opponent.board[row][col].is_sunk():
+      self.update_board(opponent, player, row, col)
+
+    # Check if the player's ship is sunk
+    elif player.board[row][col].is_sunk():
+      self.update_board(player, opponent, row, col)
+
 
   def __orient_ship(self, row, col):
     # If the selected ship length is > 1, orient the ship on the board while hiding it.
@@ -154,31 +148,35 @@ class Player(GameObject):
     # l: left
     # r: right
     # ---------------------------------------------------------- #
+    # Default for 1x1 ships to orient themselves
+    direction = self.__select_direction() if self.selected_ship_length() > 1 else "u"
 
+    if direction in ["u","d","l","r"]: # Extra check
+      for i in range(self.selected_ship_length()):
+        # List the coords that this ship will occupy, if the coords are validated downstream
+        coords = self.direction_to_coord(direction, row, col, i)
+        tile = self.board[coords[0]][coords[1]]
+        tile.symbol = self.selected_ship().symbol
+        self.selected_ship().coords.append(tile)
+    else:
+      print("Pick one: u d l r")
+
+  def __select_direction(self):
     direction = "" # Init for while loop
     while direction not in ["u","d","l","r"]:
-      if self.selected_ship_length() > 1:
-        print("u = Up\nd = Down\nl = Left\nr = Right")
-        direction = input("Which direction do you want your ship to be oriented?: ").lower()
-      else:
-        # Default for 1x1 ships to orient themselves
-        direction = "u"
+      print("u = Up\nd = Down\nl = Left\nr = Right")
+      direction = input("Which direction do you want your ship to be oriented?: ").lower()
 
-      if direction in ["u","d","l","r"]:
-        for i in range(self.selected_ship_length()):
-          # List the coords that this ship will occupy, if the coords are validated downstream
-          self.selected_ship().coords.append(self.direction_to_coord(direction, row, col, i))
-      else:
-        print("Pick one: u d l r")
+    return direction
 
   def selected_ship_has_been_hidden_in_a_valid_location(self):
     # Verify if the selected ship's list of coordinates are all on the board and vacant Tiles
     # ---------------------------------------------------------- #
     flag = False
     if self.coords_are_inbounds(self.selected_ship().coords): # if we're at least placing the ship on the board...
-      for coord in self.selected_ship().coords:
-        if type(self.board[coord[0]][coord[1]]) == Tile: #...make sure we're not overlapping ships
-          self.board[coord[0]][coord[1]] = self.selected_ship() # Set the Tile to be the Ship
+      for tile in self.selected_ship().coords:
+        if type(self.board[tile.row][tile.col]) == Tile: #...make sure we're not overlapping ships
+          self.board[tile.row][tile.col] = self.selected_ship() # Set the Tile to be the Ship
           flag = True
         else:
           return False # Every coord needs to be valid
@@ -205,5 +203,5 @@ class Player(GameObject):
 
   def print_remaining_ships_to_hide(self):
     if self.ship_list != []:
-      print("Remaining ships:")
+      print("\nRemaining ships:")
       self.print_ship_list()
