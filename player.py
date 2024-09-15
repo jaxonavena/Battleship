@@ -1,34 +1,36 @@
-from game_object import GameObject
-from tile import Tile
-from ship import Ship
+from game_object import GameObject # Import the GameObject class from game_object module
+from tile import Tile  # Import the Tile class from tile module
+from ship import Ship # Import the Ship class from ship module
 
 class Player(GameObject):
-  def __init__(self, id, active):
-    super().__init__()
-    self.id = id
-    self.active = active #boolean
-    self.board = []
-    self.__build_board_of_tiles(self.board)
-    self.attacked_coords = []
-    self.ship_list = []
+  def __init__(self, id, active):  # Constructor for Player class
+    super().__init__()  # Call the parent class constructor
+    self.id = id  # Set the player's ID
+    self.active = active  # Set whether the player is active (True/False)
+    self.board = []  # Initialize an empty list for the player's board
+    self.__build_board_of_tiles(self.board)  # Build the player's board by calling __build_board_of_tiles
+    self.attacked_coords = []  # Initialize an empty list for attacked coordinates
+    self.ship_list = []  # Initialize an empty list for the player's ships
 
     # Opponent information
     self.opp = None # The other Player
     self.opps_board = [] # Board to track where you have fired at your opponent
-    self.__build_board_of_tiles(self.opps_board)
+    self.__build_board_of_tiles(self.opps_board) # Build the opponent's board by calling __build_board_of_tiles
 
-  def set_opponent(self,opponent):
-    self.opp = opponent
+  # Method to set the opponent for the player
+  def set_opponent(self, opponent):
+    self.opp = opponent  # Set the opponent to the passed player object
 
   def __build_board_of_tiles(self, board):
     # Fills out a given list with 10 nested lists of 10 Tile items
     # ---------------------------------------------------------- #
     for row in range(10):
       board.append([]) # add row
-      for col in range(10):
-        tile = Tile(row, col)
+      for col in range(10): # Loop through columns 0-9
+        tile = Tile(row, col) # Create a new Tile object for each row and column
         board[row].append(tile) # place tiles
 
+  # Method to set the list of ships for the player
   def set_ship_list(self, num_ships):
     # Add the proper number of properly sized ships to self.ship_list. Ship(name, size, symbol)
     # ---------------------------------------------------------- #
@@ -38,7 +40,7 @@ class Player(GameObject):
         f"1x{i}",                          # Ship size (e.g. "1x3")
         self.ship_size_to_symbol[f"1x{i}"] # Ship symbol (e.g. "#")
       )
-      for i in range(1, num_ships + 1)
+      for i in range(1, num_ships + 1) # Loop from 1 to num_ships
     ]
     self.ship_list.reverse() # Desc. order
 
@@ -173,35 +175,42 @@ class Player(GameObject):
     if board == self.opps_board: # Mark shot is called twice per hit/miss, so we only want to print the result once
       self.print_shot_result(result)
 
+  # Method to print the result of a shot (hit or miss)
   def print_shot_result(self, result):
-    self.br()
-    self.br(result, gap = 5)
+      self.br()  # Print a breakline to separate sections for better readability
+      self.br(result, gap = 5)  # Print the result of the shot (hit or miss) with a gap between characters
 
+  # Method to update the boards when a ship is sunk
   def update_board(self, sinking_player, other_player, row, col):
-    for tile in sinking_player.board[row][col].tiles:
-      other_player.opps_board[tile.row][tile.col].symbol = "S"
-      sinking_player.board[tile.row][tile.col].sink()
+      # Loop through each tile of the sinking ship
+      for tile in sinking_player.board[row][col].tiles:
+          # Update the opponent's board to show that the ship has been sunk (mark with "S")
+          other_player.opps_board[tile.row][tile.col].symbol = "S"
+          # Call the sink() method on the ship to mark its tiles as sunk on the sinking player's board
+          sinking_player.board[tile.row][tile.col].sink()
 
+  # Method to update the game state when ships are sunk
   def update_sunk_ships(self, player, opponent, coord):
-    row, col = self.coord_translator(coord)
+      row, col = self.coord_translator(coord)  # Translate the attacked coordinate into row and column indices
 
-    # Check if the opponent's ship is sunk
-    if opponent.board[row][col].is_sunk():
-      opponent.ship_list.pop()
-      self.update_board(opponent, player, row, col)
+      # Check if the opponent's ship at the attacked coordinate has been sunk
+      if opponent.board[row][col].is_sunk():
+          opponent.ship_list.pop()  # Remove the sunk ship from the opponent's ship list
+          self.update_board(opponent, player, row, col)  # Update the boards to show the sunk ship
 
-    # Check if the player's ship is sunk
-    elif player.board[row][col].is_sunk():
-      player.ship_list.pop()
-      self.update_board(player, opponent, row, col)
+      # Check if the player's own ship at the attacked coordinate has been sunk
+      elif player.board[row][col].is_sunk():
+          player.ship_list.pop()  # Remove the sunk ship from the player's ship list
+          self.update_board(player, opponent, row, col)  # Update the boards to show the sunk ship
 
+  # Method to print the list of ships for the player
   def print_ship_list(self):
-    # Print the ship list
-    # ---------------------------------------------------------- #
-    for ship in self.ship_list:
-      print(f"{ship.name} ({ship.size})")
+      # Loop through each ship in the player's ship list and print its name and size
+      for ship in self.ship_list:
+          print(f"{ship.name} ({ship.size})")
 
+  # Method to print the remaining ships that need to be hidden
   def print_remaining_ships_to_hide(self):
-    if self.ship_list != []:
-      print("\nRemaining ships:")
-      self.print_ship_list()
+      if self.ship_list != []:  # Check if there are still ships to hide
+          print("\nRemaining ships:")  # Print a message indicating that there are remaining ships
+          self.print_ship_list()  # Call print_ship_list() to display the list of remaining ships

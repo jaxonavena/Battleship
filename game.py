@@ -1,78 +1,94 @@
-from game_object import GameObject
-class Game(GameObject):
-  def __init__(self, player_bank):
-    super().__init__()
-    self.player_bank = player_bank
-    self.player1 = player_bank[0]
-    self.player2 = player_bank[1]
-    self.turn_count = 1
-    self.active_player = self.get_active_player()
-    self.num_ships = 0
+from game_object import GameObject  # Import the GameObject class from game_object module
 
-  def __switch_turns(self): # Switch who is activated
+class Game(GameObject):  # Define the Game class, inheriting from GameObject
+  def __init__(self, player_bank):  # Constructor for Game class
+    super().__init__()  # Call the parent class constructor
+    self.player_bank = player_bank  # Set player_bank to the passed value
+    self.player1 = player_bank[0]  # Set player1 to the first player in player_bank
+    self.player2 = player_bank[1]  # Set player2 to the second player in player_bank
+    self.turn_count = 1  # Initialize turn_count to 1
+    self.active_player = self.get_active_player()  # Get the active player
+    self.num_ships = 0  # Initialize num_ships to 0
+
+  # Method to switch turns between players
+  def __switch_turns(self):
+    # Loop through each player in player_bank
     for player in self.player_bank:
-      player.active = (not player.active)
-    self.active_player = self.get_active_player()
+      player.active = (not player.active)  # Toggle the active status of each player
+    self.active_player = self.get_active_player()  # Update the active player
 
+  # Method to start the game
   def start(self):
-    self.__get_num_ships() # Determine the number of ships each player will have
-    self.__set_ship_lists() # Generate the list of ships for each player. We pop off each ship as we hide it.
-    self.__setup_boards() # Hide the ships
+    self.__get_num_ships()  # Get the number of ships each player will have
+    self.__set_ship_lists()  # Set the ship lists for each player
+    self.__setup_boards()  # Set up the boards and hide the ships
 
-    self.__set_ship_lists() # Regenerate the ship lists so we can pop them off as they sink.
-    self.__take_turn(1) # Start shootin
+    self.__set_ship_lists()  # Regenerate the ship lists for the game
+    self.__take_turn(1)  # Start the game by taking the first turn
 
+  # Method to take a turn
   def __take_turn(self, turn_count):
+    # Check if the active player's ship list is empty (game over)
     if self.active_player.ship_list == []:
-      self.end_game()
+      self.end_game()  # End the game
 
-    print(f"\n ==== Round #{turn_count} ==== Player {self.active_player.id}'s turn ====\n")
-    print("Your board")
-    self.print_board(self.active_player.board)
-    print("Opp's board")
-    self.print_board(self.active_player.opps_board)
+    print(f"\n ==== Round #{turn_count} ==== Player {self.active_player.id}'s turn ====\n")  # Print the current turn number and active player
+    print("Your board")  # Print player's own board
+    self.print_board(self.active_player.board)  # Call print_board() to display active player's board
+    print("Opp's board")  # Print opponent's board
+    self.print_board(self.active_player.opps_board)  # Call print_board() to display the opponent's board
 
-    coord = self.get_input(f"Player {self.active_player.id} -- Attack a coordinate: ")
+    coord = self.get_input(f"Player {self.active_player.id} -- Attack a coordinate: ")  # Prompt the active player for a coordinate to attack
 
+    # If the input is a valid coordinate
     if self.valid_coord(coord):
-      if coord not in self.active_player.attacked_coords: # Check if the spot has been attacked already
-        self.active_player.attacked_coords.append(coord)
-        self.active_player.attack_ship(coord)
-        print("=" * 50)
-        self.turn_count += 1
-        self.__switch_turns()
+      # Check if the coordinate has already been attacked
+      if coord not in self.active_player.attacked_coords:
+        self.active_player.attacked_coords.append(coord)  # Add the coordinate to the list of attacked coordinates
+        self.active_player.attack_ship(coord)  # Call attack_ship() to attack the ship at the coordinate
+        print("=" * 50)  # Print a separator line
+        self.turn_count += 1  # Increment the turn count
+        self.__switch_turns()  # Switch turns to the other player
       else:
-        print("Space already taken. Try again!")
+        print("Space already taken. Try again!")  # If the spot has already been attacked, print an error message
 
-    self.__take_turn(self.turn_count) # This will replay the turn if the input was invalid otherwise it will start the next turn
+    self.__take_turn(self.turn_count)  # Call __take_turn() recursively to continue the game
 
+  # Method to get the active player
   def get_active_player(self):
+    # Loop through each player in the player_bank
     for player in self.player_bank:
-      if player.active == True:
-        return player
+      if player.active == True:  # If the player is active
+        return player  # Return the active player
 
+  # Method to set up the boards for both players
   def __setup_boards(self):
+    # Loop through each player in player_bank
     for player in self.player_bank:
-      player.hide_ships()
-      print(f"Player {player.id} - All ships are hidden...")
-      self.print_board(player.board) # Show their board after they're finished hiding their ships
-      self.br()
+      player.hide_ships()  # Call hide_ships() for each player to hide their ships
+      print(f"Player {player.id} - All ships are hidden...")  # Print that all ships are hidden
+      self.print_board(player.board)  # Print the player's board after ships are hidden
+      self.br()  # Print a break line
 
+  # Method to get the number of ships from the user
   def __get_num_ships(self):
-    while 0 >= self.num_ships or self.num_ships > 5: # Until num ships is a number 1-5
-      print("Please enter a number between 1 and 5.")
+    # Keep asking for the number of ships until a valid number (1-5) is entered
+    while 0 >= self.num_ships or self.num_ships > 5:
+      print("Please enter a number between 1 and 5.")  # Prompt the user to enter a number between 1 and 5
       try:
-        self.num_ships = int(input("How many ships per team?: "))
+        self.num_ships = int(input("How many ships per team?: "))  # Convert the input to an integer
       except:
-        self.num_ships = 0
+        self.num_ships = 0  # If an error occurs, set num_ships to 0
 
+  # Method to set the ship lists for both players
   def __set_ship_lists(self):
-    self.player1.set_ship_list(self.num_ships)
-    self.player2.set_ship_list(self.num_ships)
+    self.player1.set_ship_list(self.num_ships)  # Set the ship list for player1
+    self.player2.set_ship_list(self.num_ships)  # Set the ship list for player2
 
+  # Method to end the game
   def end_game(self):
-    self.br()
-    self.br("W", gap = 5)
-    self.br()
-    print(f"Player {self.active_player.opp.id} wins!")
-    exit()
+    self.br()  # Print a break line
+    self.br("W", gap = 5)  # Print a victory message
+    self.br()  # Print another break line
+    print(f"Player {self.active_player.opp.id} wins!")  # Print the winning player's ID
+    exit()  # Exit the program
