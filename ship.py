@@ -1,3 +1,27 @@
+"""
+Program Name: Ship Class
+
+Description:
+    This file define the Ship class. It contains attribute for this the ship's name, size, symbol, 
+    health points (hp), coordinates, and tiles. The class also provides methods 
+    to check if the ship has been sunk, mark the ship as sunk, and manage its 
+    representation in string and console contexts.
+
+Inputs:
+    - Ship name, size, and symbol when initializing a new Ship object.
+    - Coordinates for placing the ship on the game board.
+
+Output:
+    - Returns the ship's symbol
+    - Updates the ship's status to sunk when all of its health points are depleted.
+
+Author:
+    Jaxon Avena
+
+Creation Date:
+    September 10, 2024
+"""
+
 # Ship class defines attributes and methods related to the ships used in the game
 class Ship:
   
