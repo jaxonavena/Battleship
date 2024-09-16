@@ -65,6 +65,18 @@ Added comments and documentations
 
 # Timi
 
+- 9/12 
+
+---
+15 minutes, GTA meeting
+
+1 hour, Later that evening, I reviewed the code to identify the source of the bugs and attempted to fix them.
+
+- 9/13 1 hour
+
+```
+Had a meeting with the team to discuss the remaining tasks. The key issues that needed to be addressed were a bug causing the player's board to display incorrectly after a hit, and implementing the logic to end the game when all ships are sunk.
+
 # Peter
 
 - 9/10 2 hours
