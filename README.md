@@ -19,30 +19,30 @@ To start the game:
 
 # Key Classes and Methods
 
-# GameObject
+## GameObject
 This is the base class that contains common utilities and methods like:
 
 - valid_coord(): Validates user input coordinates.
 - print_board(): Prints the board with row and column labels.
 - br(): Prints breaklines for formatting purposes.
-# Player
+## Player
 Manages individual player actions and information, including:
 
 - set_ship_list(): Initializes each player's ships.
 - hide_ships(): Allows players to hide their ships on the board.
 - attack_ship(): Handles attacks and determines hits or misses.
-# Game
+## Game
 Handles the overall game flow, including:
 
 - start(): Begins the game by setting up the boards and starting turns.
 - __switch_turns(): Switches between players after each turn.
 - end_game(): Ends the game and announces the winner.
-# Ship
+## Ship
 Represents individual ships with attributes like:
 
 - hp: Represents the health points of the ship.
 - is_sunk(): Checks if a ship has been sunk.
-# Tile
+## Tile
 Represents a single tile on the board. Each tile knows its position and can change its symbol based on game events.
 
 # Features
@@ -52,5 +52,4 @@ Represents a single tile on the board. Each tile knows its position and can chan
 
 # Future Improvements
 - Add multiplayer over the network.
-- Implement a graphical user interface (GUI).
-- Add more game modes and custom ship sizes.
+- Implement a GUI.
