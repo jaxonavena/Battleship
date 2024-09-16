@@ -1,3 +1,26 @@
+"""
+  Program Name: GameObject
+  
+  Description: GameObject provides  functions to handle the game. It has method 
+  for validating coordinates, printing the game board, translating coordinates,
+  and handling game inputs
+
+  Inputs: 
+  -Coordinates 
+  -Board object
+  -User inputs for checking if the player wants to quit
+
+  Output:
+  -print the game board
+  -select hit/miss/sink/win phrases based on game events
+  -Translated coordinates
+  Author: 
+  Jaxon Avena
+
+  Creation Date: 
+  September 10, 2024
+"""
+
 import random  # Import the random module for random selections
 from ship import Ship  # Import the Ship class from the ship module
 

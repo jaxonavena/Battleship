@@ -1,3 +1,21 @@
+"""
+Program Name: Game Initialization
+
+Description:
+    This file initializes a Battleship game by creating two Player objects (Player 1 and Player 2),
+    setting their opponent relationships, and then starting the game using the Game class. The game
+    logic is handled by the Game and Player classes.
+
+Output:
+    - The game starts, displaying the boards and managing the turn-based gameplay for Player 1 and Player 2.
+
+Author:
+    Jaxon Avena
+
+Creation Date:
+    September 10, 2024
+"""
+
 from player import Player  # Import the Player class from the player module
 from game import Game  # Import the Game class from the game module
 

@@ -1,3 +1,28 @@
+"""
+Program Name: BattleShip Player
+
+Description: This file defines the player class which inherits from the GameObject class. it tracks 
+the attacks of each player, update the game board, and setting up te opponent's information. It also manage
+the hiding of ships, checking for hits or misses, and determining if the ship has been sunk. 
+
+Inputs:
+    - Player ID(whether the player is active or not).
+    - User inputs for placing ships on the board and attacking opponent coordinates.
+    - Coordinates for translating attacks and ship placements.
+    - Number of ships per player.
+
+Output:
+    - Prints the player and opponent boards, updates the boards after attacks, and 
+      displays the results of hits, misses, or ship sinking.
+
+
+Author:
+    Jaxon Avena
+
+Creation Date:
+    September 10, 2024
+"""
+
 from game_object import GameObject # Import the GameObject class from game_object module
 from tile import Tile  # Import the Tile class from tile module
 from ship import Ship # Import the Ship class from ship module

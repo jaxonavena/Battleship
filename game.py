@@ -1,3 +1,26 @@
+"""
+Program Name: Game Manager
+
+Description: This file defines the Game class which inherits from GameObject. It manages
+the flow of the Battleship game, including swicthing player turns, setting up board, and 
+determining  when the game ends. it aslo allow players to attack coordinates, set the number
+set the number of ships, and print the current state of the game
+
+Inputs:
+    - player_bank = [p1, p2]
+    - User inputs for setting the number of ships and choosing attack coordinates.
+
+Output:
+    - Displays the current turn, player boards, and the results of attacks (hit/miss).
+    - Declares the winner when the game ends.
+
+Author:
+    Jaxon Avena
+
+Creation Date:
+    September 10, 2024
+"""
+
 from game_object import GameObject  # Import the GameObject class from game_object module
 
 class Game(GameObject):  # Define the Game class, inheriting from GameObject
