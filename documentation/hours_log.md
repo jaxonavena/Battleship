@@ -69,7 +69,10 @@ Added comments and documentations
 - 9/10 2 hours
 ```
 Had a team meeting where we went over the setup code that Jaxon made and talked about who was going to implement which features moving forward. We also talked about a bug Jaxon found where you weren't able to hide the correct amount of ships
+<<<<<<< HEAD
 
+=======
+>>>>>>> row-10-bug
 Later that evening, I fixed the bug and pushed it to the repo
 ```
 - 9/12 15 minutes, GTA meeting
@@ -81,6 +84,13 @@ Met with the team to talk about what was left to be done. The main problems left
 ```
 Implemented end game logic so that the right person wins when all the opponent's ships are sunk. Met up with Jaxon to work together and make sure we could resolve conflicts since we were both working at the same time. We also worked on the previous bug where the player's board wouldn't appear correctly, but Jaxon was able to fix it.
 ```
+<<<<<<< HEAD
+=======
+-9/15 1 hour
+```
+Fixed a bug where row 10 would be recognized as row 1 when inputting coordinates and adjusted the board's spacing for the number 10 by offsetting the other rows by a space.
+```
+>>>>>>> row-10-bug
 
 # Pete
 
