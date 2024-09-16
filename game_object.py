@@ -122,14 +122,14 @@ class GameObject:  # Define the GameObject class
     # Convert column letter to index
     col = self.letter_to_col_index[coord[0].upper()]
     # Convert row number to index (subtract 1 for zero-based indexing)
-    row = int(coord[1]) - 1
+    row = int(coord[1:]) - 1
     # Return row and column as indices
     return row, col
 
   # Method to print the board with rows and columns labeled
   def print_board(self, board):
     # Print the column headers
-    print("   A B C D E F G H I J")
+    print("    A B C D E F G H I J")
     row = 0  # Initialize row counter
     # Loop through each row in the board
     for row_list in board:
@@ -148,7 +148,8 @@ class GameObject:  # Define the GameObject class
         # Add the object's symbol to the list of stringified objects
         stringified_objs.append(obj.symbol)
       # Print the row number and the symbols for that row
-      print(f"{row + 1}  " + " ".join(stringified_objs))
+      extra_space = " " if row != 9 else ""
+      print(f"{row + 1} " + extra_space + " ".join(stringified_objs))
       row += 1  # Increment the row counter
 
   # Method to check if the user wants to quit the game

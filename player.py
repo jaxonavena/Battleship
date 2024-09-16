@@ -220,6 +220,7 @@ class Player(GameObject):
 
       # Check if the opponent's ship at the attacked coordinate has been sunk
       if opponent.board[row][col].is_sunk():
+          self.print_shot_result("S")
           opponent.ship_list.pop()  # Remove the sunk ship from the opponent's ship list
           self.update_board(opponent, player, row, col)  # Update the boards to show the sunk ship
 
